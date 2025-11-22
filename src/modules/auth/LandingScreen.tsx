@@ -10,6 +10,7 @@ import Input from '../../components/Input';
 import { mockAuthService } from './mockAuth';
 import { loginSuccess } from '../../store/slices/authSlice';
 import { biometricService } from '../../services/biometric';
+import { keychainService } from '../../services/keychain';
 import { COLORS, SIZES } from '../../utils/constants';
 
 const LandingScreen: React.FC = () => {
@@ -34,10 +35,18 @@ const LandingScreen: React.FC = () => {
   const handleBiometricLogin = async () => {
     const result = await biometricService.authenticate(t('auth.biometricPrompt'));
     if (result.success) {
-      // For demo purposes, login as guest after successful biometric auth
-      const authResult = await mockAuthService.loginAsGuest();
-      if (authResult.success && authResult.user) {
-        dispatch(loginSuccess(authResult.user));
+      // Try to get stored credentials
+      const credentials = await keychainService.getUserCredentials();
+      if (credentials) {
+        // Login with stored credentials
+        const authResult = await mockAuthService.login(credentials);
+        if (authResult.success && authResult.user) {
+          dispatch(loginSuccess(authResult.user));
+        } else {
+          Alert.alert(t('auth.loginFailed'), t('auth.storedCredentialsInvalid'));
+        }
+      } else {
+        Alert.alert(t('auth.biometricFailed'), t('auth.noStoredCredentials'));
       }
     } else {
       Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));

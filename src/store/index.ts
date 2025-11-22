@@ -9,7 +9,7 @@ import appSlice from '../modules/app/redux/appSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth', 'app'], // Only persist auth and app state
+  whitelist: ['auth', 'app', 'event'], // Persist auth, app, and event state (for favorites)
 };
 
 const rootReducer = combineReducers({

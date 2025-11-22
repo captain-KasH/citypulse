@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import FavoritesList from '../profile/components/FavoritesList';
@@ -15,8 +16,15 @@ const FavoritesScreen: React.FC = () => {
   const { favorites } = useSelector((state: RootState) => state.event);
   const { user } = useSelector((state: RootState) => state.auth);
   const { language } = useSelector((state: RootState) => state.app);
+  const [favoritesCount, setFavoritesCount] = useState(0);
   
   const userFavorites = user ? favorites[user.id] || [] : [];
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setFavoritesCount(userFavorites.length);
+    }, [userFavorites.length])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,7 +57,7 @@ const FavoritesScreen: React.FC = () => {
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             <Text style={styles.count}>
-              {userFavorites.length} {language === 'en' ? 'favorite events' : 'أحداث مفضلة'}
+              {favoritesCount} {language === 'en' ? 'favorite events' : 'أحداث مفضلة'}
             </Text>
             <FavoritesList />
           </View>

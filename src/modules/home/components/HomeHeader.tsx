@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { RootStackParamList } from '../../../types/navigation';
 import type { NavigationProp } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -16,18 +17,19 @@ const HomeHeader: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<HeaderNavigationProp>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.header}>
       <View style={styles.headerContent}>
-        <View>
+        <View style={styles.textContainer}>
           <Text style={styles.greeting}>
             {t('home.greeting', { name: user?.name || t('auth.guest') })}
           </Text>
           <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
         </View>
         <TouchableOpacity 
-          style={styles.profileIcon}
+          style={[styles.profileIcon, { marginRight: Math.max(0, insets.right) }]}
           onPress={() => navigation.navigate('Main', { screen: SCREENS.PROFILE})}
         >
           <Text style={styles.profileIconText}>
@@ -48,6 +50,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
+  },
+  textContainer: {
+    flex: 1,
+    marginRight: 16,
   },
   profileIcon: {
     width: 40,

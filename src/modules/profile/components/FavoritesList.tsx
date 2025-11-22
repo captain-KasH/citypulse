@@ -8,12 +8,13 @@ import { COLORS } from '../../../utils/constants';
 
 const FavoritesList: React.FC = () => {
   const navigation = useNavigation();
-  const { events, favorites } = useSelector((state: RootState) => state.event);
+  const { events, upcomingEvents, favorites } = useSelector((state: RootState) => state.event);
   const { user } = useSelector((state: RootState) => state.auth);
   const { language } = useSelector((state: RootState) => state.app);
 
   const userFavorites = user ? favorites[user.id] || [] : [];
-  const favoriteEvents = events.filter(event => userFavorites.includes(event.id));
+  const allEvents = [...events, ...upcomingEvents];
+  const favoriteEvents = allEvents.filter(event => userFavorites.includes(event.id));
 
   const handleEventPress = (eventId: string) => {
     navigation.navigate('EventDetail' as never, { eventId } as never);

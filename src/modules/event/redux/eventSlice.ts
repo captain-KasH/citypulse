@@ -125,10 +125,21 @@ const eventSlice = createSlice({
       if (!state.favorites[userId]) {
         state.favorites[userId] = [];
       }
-      if (state.favorites[userId].includes(eventId)) {
-        state.favorites[userId] = state.favorites[userId].filter(id => id !== eventId);
+      const currentFavorites = [...state.favorites[userId]];
+      if (currentFavorites.includes(eventId)) {
+        state.favorites[userId] = currentFavorites.filter(id => id !== eventId);
       } else {
-        state.favorites[userId].push(eventId);
+        state.favorites[userId] = [...currentFavorites, eventId];
+      }
+    },
+    loadFavorites: (state, action: PayloadAction<{userId: string, favorites: string[]}>) => {
+      const { userId, favorites } = action.payload;
+      state.favorites[userId] = favorites;
+    },
+    clearUserFavorites: (state, action: PayloadAction<string>) => {
+      const userId = action.payload;
+      if (state.favorites[userId]) {
+        delete state.favorites[userId];
       }
     },
     setSearchQuery: (state, action: PayloadAction<string>) => {
@@ -137,5 +148,5 @@ const eventSlice = createSlice({
   },
 });
 
-export const { setEvents, appendEvents, setLoading, setLoadingMore, toggleFavorite, setSearchQuery, resetPagination, setUpcomingEvents, appendUpcomingEvents } = eventSlice.actions;
+export const { setEvents, appendEvents, setLoading, setLoadingMore, toggleFavorite, setSearchQuery, resetPagination, setUpcomingEvents, appendUpcomingEvents, loadFavorites, clearUserFavorites } = eventSlice.actions;
 export default eventSlice.reducer;
