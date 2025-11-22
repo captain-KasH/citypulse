@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker } from 'react-native-maps';
+import SafeMapView from '../../components/SafeMapView';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -184,7 +184,7 @@ const EventDetailScreen: React.FC = () => {
               {t('event.location')}
             </Text>
             {event.location ? (
-              <MapView
+              <SafeMapView
                 style={styles.map}
                 initialRegion={{
                   latitude: event.location.latitude,
@@ -192,16 +192,16 @@ const EventDetailScreen: React.FC = () => {
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01,
                 }}
-              >
-                <Marker
-                  coordinate={{
+                marker={{
+                  coordinate: {
                     latitude: event.location.latitude,
                     longitude: event.location.longitude,
-                  }}
-                  title={event.name}
-                  description={event.venue}
-                />
-              </MapView>
+                  },
+                  title: event.name,
+                  description: event.venue,
+                }}
+                fallbackText={t('event.mapUnavailable')}
+              />
             ) : (
               <View style={styles.mapPlaceholder}>
                 <Text style={styles.mapText}>{t('event.mapPreview')}</Text>
