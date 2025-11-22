@@ -130,6 +130,7 @@ const LandingScreen: React.FC = () => {
             onPress={() => {/* Placeholder for Phase 2 */}}
             variant="outline"
             style={[styles.button, styles.googleButton]}
+            disabled
           />
           
           <View style={styles.signupContainer}>

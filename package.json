@@ -9,7 +9,9 @@
     "start": "react-native start",
     "test": "jest",
     "postinstall": "node scripts/postinstall.js",
-    "pods": "cd ios && pod install"
+    "pods": "cd ios && pod install",
+    "build:android": "cd android && ./gradlew assembleRelease",
+    "build:android:debug": "cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
