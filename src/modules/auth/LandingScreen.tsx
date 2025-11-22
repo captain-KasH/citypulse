@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { mockAuthService } from './mockAuth';
@@ -10,6 +11,7 @@ import { loginSuccess } from '../../store/slices/authSlice';
 import { COLORS, SIZES } from '../../utils/constants';
 
 const LandingScreen: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
@@ -30,12 +32,12 @@ const LandingScreen: React.FC = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert(t('common.error'), t('auth.fillAllFields'));
       return;
     }
 
     if (!validateEmail(email)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address');
+      Alert.alert(t('auth.invalidEmail'), t('auth.enterValidEmail'));
       return;
     }
 
@@ -46,7 +48,7 @@ const LandingScreen: React.FC = () => {
     if (result.success && result.user) {
       dispatch(loginSuccess(result.user));
     } else {
-      Alert.alert('Login Failed', result.error || 'Please try again');
+      Alert.alert(t('auth.loginFailed'), result.error || t('auth.tryAgain'));
     }
   };
 
@@ -54,54 +56,54 @@ const LandingScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>Welcome to City Pulse</Text>
-          <Text style={styles.subtitle}>Discover amazing local events</Text>
+          <Text style={styles.title}>{t('auth.welcomeTitle')}</Text>
+          <Text style={styles.subtitle}>{t('auth.welcomeSubtitle')}</Text>
         </View>
 
         <View style={styles.formContainer}>
           <Input
-            label="Email"
-            placeholder="Enter your email"
+            label={t('auth.email')}
+            placeholder={t('auth.enterEmail')}
             value={email}
             onChangeText={setEmail}
           />
           
           <Input
-            label="Password"
-            placeholder="Enter your password"
+            label={t('auth.password')}
+            placeholder={t('auth.enterPassword')}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
 
           <Button
-            title="Login"
+            title={t('auth.login')}
             onPress={handleLogin}
             loading={loading}
             style={styles.loginButton}
           />
           
           <Button
-            title="Continue as Guest"
+            title={t('auth.guestMode')}
             onPress={handleGuestLogin}
             variant="secondary"
             style={styles.button}
           />
           
           <Button
-            title="Sign in with Google"
+            title={t('auth.signInGoogle')}
             onPress={() => {/* Placeholder for Phase 2 */}}
             variant="outline"
             style={[styles.button, styles.googleButton]}
           />
           
           <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account? </Text>
+            <Text style={styles.signupText}>{t('auth.noAccount')} </Text>
             <Text 
               style={styles.signupLink}
               onPress={() => navigation.navigate('SignUp' as never)}
             >
-              Register here
+              {t('auth.registerHere')}
             </Text>
           </View>
         </View>

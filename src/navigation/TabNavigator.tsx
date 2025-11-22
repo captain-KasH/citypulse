@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeIconContainer: {
-    backgroundColor: COLORS.PRIMARY + '20', // 20% opacity
+    backgroundColor: COLORS.PRIMARY + '20',
   },
 
 });

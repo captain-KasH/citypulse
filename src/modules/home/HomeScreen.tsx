@@ -14,6 +14,7 @@ import EventListEmpty from './components/EventListEmpty';
 import EventListFooter from './components/EventListFooter';
 import EventCardSkeleton from '../../components/EventCardSkeleton';
 import { COLORS, SIZES, FEATURE_FLAGS } from '../../utils/constants';
+import { SCREENS } from '../../constants/screens';
 
 type HomeNavigationProp = NavigationProp<RootStackParamList>;
 
@@ -55,7 +56,7 @@ const HomeScreen: React.FC = () => {
 
   const handleEventPress = (eventId: string) => {
     clearSuggestions();
-    navigation.navigate('EventDetail', { eventId });
+    navigation.navigate(SCREENS.EVENT_DETAIL, { eventId });
   };
 
   const renderEventItem: ListRenderItem<any> = ({ item }) => (

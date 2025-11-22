@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Event } from '../../../store/slices/eventSlice';
 import { COLORS, SIZES, FEATURE_FLAGS } from '../../../utils/constants';
 
@@ -16,6 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onSuggestionPress,
   onFocus,
 }) => {
+  const { t } = useTranslation();
   const [keyword, setKeyword] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -38,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <View style={styles.container}>
       <TextInput
         style={[styles.input, isFocused && styles.inputFocused]}
-        placeholder="Search events (keyword, city)..."
+        placeholder={t('home.searchPlaceholder')}
         value={keyword}
         onChangeText={handleKeywordChange}
         onFocus={() => {
@@ -75,7 +77,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       
       {FEATURE_FLAGS.ENABLE_SEARCH_SUGGESTIONS && showSuggestions && keyword.length > 0 && suggestions.length === 0 && (
         <View style={styles.noResultsContainer}>
-          <Text style={styles.noResultsText}>No events found</Text>
+          <Text style={styles.noResultsText}>{t('home.noEvents')}</Text>
         </View>
       )}
 

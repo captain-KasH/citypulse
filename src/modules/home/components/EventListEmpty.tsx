@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import EventCardSkeleton from '../../../components/EventCardSkeleton';
 import { COLORS } from '../../../utils/constants';
 
@@ -14,6 +15,7 @@ const EventListEmpty: React.FC<EventListEmptyProps> = ({
   initialLoading,
   searchQuery,
 }) => {
+  const { t } = useTranslation();
   if (loading || initialLoading) {
     return (
       <View>
@@ -27,15 +29,15 @@ const EventListEmpty: React.FC<EventListEmptyProps> = ({
   if (searchQuery) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No events found for "{searchQuery}"</Text>
-        <Text style={styles.emptySubtext}>Try a different search term</Text>
+        <Text style={styles.emptyText}>{t('home.noEventsForQuery', { query: searchQuery })}</Text>
+        <Text style={styles.emptySubtext}>{t('home.tryDifferentSearch')}</Text>
       </View>
     );
   }
   
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No upcoming events</Text>
+      <Text style={styles.emptyText}>{t('home.noUpcomingEvents')}</Text>
     </View>
   );
 };
