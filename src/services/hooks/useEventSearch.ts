@@ -12,14 +12,16 @@ export const useEventSearch = () => {
   const { currentPage, hasMore } = useSelector((state: RootState) => state.event);
   const [suggestions, setSuggestions] = useState<Event[]>([]);
   const [currentKeyword, setCurrentKeyword] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const debouncedSearch = debounce(async (keyword: string) => {
     if (!keyword.trim()) {
       setSuggestions([]);
+      setSearchLoading(false);
       return;
     }
 
-    dispatch(setLoading(true));
+    setSearchLoading(true);
     dispatch(resetPagination());
     setCurrentKeyword(keyword);
     try {
@@ -30,7 +32,7 @@ export const useEventSearch = () => {
       console.error('Search error:', error);
       setSuggestions([]);
     } finally {
-      dispatch(setLoading(false));
+      setSearchLoading(false);
     }
   }, 300);
 
@@ -54,10 +56,12 @@ export const useEventSearch = () => {
 
   const clearSuggestions = () => {
     setSuggestions([]);
+    setSearchLoading(false);
   };
 
   return {
     suggestions,
+    searchLoading,
     searchWithDebounce,
     loadMoreSearchResults,
     clearSuggestions,

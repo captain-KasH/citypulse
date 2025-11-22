@@ -12,6 +12,7 @@ import EventCard from './components/EventCard';
 import EventListHeader from './components/EventListHeader';
 import EventListEmpty from './components/EventListEmpty';
 import EventListFooter from './components/EventListFooter';
+import EventCardSkeleton from '../../components/EventCardSkeleton';
 import { COLORS, SIZES, FEATURE_FLAGS } from '../../utils/constants';
 
 type HomeNavigationProp = NavigationProp<RootStackParamList>;
@@ -20,7 +21,7 @@ const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeNavigationProp>();
   const [searchQuery, setSearchQuery] = useState('');
   const [showLoadMore, setShowLoadMore] = useState(false);
-  const { suggestions, searchWithDebounce, loadMoreSearchResults, clearSuggestions } = useEventSearch();
+  const { suggestions, searchLoading, searchWithDebounce, loadMoreSearchResults, clearSuggestions } = useEventSearch();
   const { events, loading, loadingMore, hasMore, totalResults, initialLoading, loadMoreUpcomingEvents, resetToUpcomingEvents } = useHomeEvents();
 
   const handleSearch = (keyword: string) => {
@@ -74,38 +75,55 @@ const HomeScreen: React.FC = () => {
         onSuggestionPress={handleEventPress}
       />
 
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id}
-        renderItem={renderEventItem}
-        ListHeaderComponent={() => (
-          <EventListHeader 
-            searchQuery={searchQuery}
-            eventsCount={events.length}
-            totalResults={totalResults}
-          />
-        )}
-        ListEmptyComponent={() => (
-          <EventListEmpty 
-            loading={loading}
-            initialLoading={initialLoading}
-            searchQuery={searchQuery}
-          />
-        )}
-        ListFooterComponent={() => (
-          <EventListFooter 
-            hasMore={FEATURE_FLAGS.MANUAL_LOAD_MORE ? showLoadMore : (hasMore && loadingMore)}
-            totalResults={totalResults}
-            eventsCount={events.length}
-            loadingMore={loadingMore}
-            onLoadMore={handleLoadMore}
-          />
-        )}
-        onEndReached={handleEndReached}
-        onEndReachedThreshold={0.1}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      />
+      {searchLoading && searchQuery ? (
+        <FlatList
+          data={[...Array(5)].map((_, index) => ({ id: `skeleton-${index}` }))}
+          keyExtractor={(item) => item.id}
+          renderItem={() => <EventCardSkeleton />}
+          ListHeaderComponent={() => (
+            <EventListHeader 
+              searchQuery={searchQuery}
+              eventsCount={0}
+              totalResults={0}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.content}
+        />
+      ) : (
+        <FlatList
+          data={events}
+          keyExtractor={(item) => item.id}
+          renderItem={renderEventItem}
+          ListHeaderComponent={() => (
+            <EventListHeader 
+              searchQuery={searchQuery}
+              eventsCount={events.length}
+              totalResults={totalResults}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <EventListEmpty 
+              loading={loading}
+              initialLoading={initialLoading}
+              searchQuery={searchQuery}
+            />
+          )}
+          ListFooterComponent={() => (
+            <EventListFooter 
+              hasMore={FEATURE_FLAGS.MANUAL_LOAD_MORE ? showLoadMore : (hasMore && loadingMore)}
+              totalResults={totalResults}
+              eventsCount={events.length}
+              loadingMore={loadingMore}
+              onLoadMore={handleLoadMore}
+            />
+          )}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.1}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.content}
+        />
+      )}
     </SafeAreaView>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { COLORS, SIZES } from '../../../utils/constants';
+import { EVENT_CONSTANTS } from '../../event/constants';
 
 interface EventListFooterProps {
   hasMore: boolean;
@@ -19,7 +20,17 @@ const EventListFooter: React.FC<EventListFooterProps> = ({
   onLoadMore,
 }) => {
   const { t } = useTranslation();
-  if (!hasMore) return null;
+  
+  // Hide if no more results or if we have all available results
+  if (!hasMore || eventsCount === 0 || (totalResults > 0 && eventsCount >= totalResults)) {
+    return null;
+  }
+  
+  // Hide if the last batch was smaller than page size (indicates end of results)
+  const lastBatchSize = eventsCount % EVENT_CONSTANTS.PAGINATION.PAGE_SIZE;
+  if (lastBatchSize > 0 && lastBatchSize < EVENT_CONSTANTS.PAGINATION.PAGE_SIZE && eventsCount > EVENT_CONSTANTS.PAGINATION.INITIAL_SIZE) {
+    return null;
+  }
   
   return (
     <View style={styles.loadMoreContainer}>

@@ -7,7 +7,5 @@ export const EVENT_CONSTANTS = {
     DEBOUNCE_DELAY: 500,
     MIN_QUERY_LENGTH: 2,
   },
-  FEATURE_FLAGS: {
-    ENABLE_SEARCH_SUGGESTIONS: true,
-  },
+  FALLBACK_IMAGE: 'https://via.placeholder.com/400x250'
 } as const;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import MapView, { Marker } from 'react-native-maps';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,8 @@ import Header from '../../components/Header';
 import EventDetailSkeleton from '../../components/EventDetailSkeleton';
 import { COLORS, SIZES } from '../../utils/constants';
 import { stripHtml } from '../../utils/stringUtils';
+import { formatDateWithLocale, getLocaleFromLanguage } from '../../utils/dateTimeUtils';
+import { EVENT_CONSTANTS } from './constants';
 
 const EventDetailScreen: React.FC = () => {
   const route = useRoute();
@@ -32,28 +35,16 @@ const EventDetailScreen: React.FC = () => {
 
   useEffect(() => {
     const loadEventDetails = async () => {
-      console.log('🎯 EventDetailScreen: Loading event details for ID:', eventId);
-      console.log('📋 EventDetailScreen: Current event in state:', event);
-      console.log('📋 EventDetailScreen: Events in Redux:', events.length, 'events');
-      
-      console.log('🚀 EventDetailScreen: Making API call for detailed event info...');
       setLoading(true);
       try {
         const eventDetails = await getEventDetails(eventId);
-        console.log('✅ EventDetailScreen: Event details received:', eventDetails);
         if (eventDetails) {
           setEvent(eventDetails);
-          console.log('🎉 EventDetailScreen: Event state updated successfully');
-        } else {
-          console.log('❌ EventDetailScreen: No event details returned from API, using existing event');
-          // Keep existing event if API fails
         }
       } catch (error) {
-        console.error('💥 EventDetailScreen: Error loading event details:', error);
-        console.log('🔄 EventDetailScreen: Using existing event data as fallback');
+        console.error('Error loading event details:', error);
       } finally {
         setLoading(false);
-        console.log('🏁 EventDetailScreen: Loading finished');
       }
     };
     
@@ -74,18 +65,8 @@ const EventDetailScreen: React.FC = () => {
 
 
   const formatDate = (dateString: string, timeString?: string) => {
-    const date = new Date(dateString);
-    const dateFormatted = date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    
-    if (timeString) {
-      return `${dateFormatted} at ${timeString}`;
-    }
-    return dateFormatted;
+    const locale = getLocaleFromLanguage(language);
+    return formatDateWithLocale(dateString, locale, timeString, language);
   };
 
   if (loading) {
@@ -135,7 +116,7 @@ const EventDetailScreen: React.FC = () => {
       
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <Image
-          source={{ uri: event.image || 'https://via.placeholder.com/400x250' }}
+          source={{ uri: event.image || EVENT_CONSTANTS.FALLBACK_IMAGE }}
           style={styles.coverImage}
           resizeMode="cover"
         />
@@ -166,7 +147,7 @@ const EventDetailScreen: React.FC = () => {
                 {t('event.date')}:
               </Text>
               <Text style={[styles.infoValue, isRTL && styles.rtlText]}>
-                {formatDate(event.date, event.time)}
+                {event.date ? formatDate(event.date, event.time) : '--'}
               </Text>
             </View>
 
@@ -175,7 +156,7 @@ const EventDetailScreen: React.FC = () => {
                 {t('event.venue')}:
               </Text>
               <Text style={[styles.infoValue, isRTL && styles.rtlText]}>
-                {event.venue}
+                {event.venue || '--'}
               </Text>
             </View>
 
@@ -184,63 +165,84 @@ const EventDetailScreen: React.FC = () => {
                 {t('event.city')}:
               </Text>
               <Text style={[styles.infoValue, isRTL && styles.rtlText]}>
-                {event.city}
+                {event.city || '--'}
               </Text>
             </View>
 
-            {event.priceRange && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, isRTL && styles.rtlText]}>
-                  {t('event.price')}:
-                </Text>
-                <Text style={[styles.infoValue, isRTL && styles.rtlText]}>
-                  ${event.priceRange.min} - ${event.priceRange.max}
-                </Text>
-              </View>
-            )}
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, isRTL && styles.rtlText]}>
+                {t('event.price')}:
+              </Text>
+              <Text style={[styles.infoValue, isRTL && styles.rtlText]}>
+                {event.priceRange ? `$${event.priceRange.min} - $${event.priceRange.max}` : '--'}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.mapSection}>
             <Text style={[styles.sectionTitle, isRTL && styles.rtlText]}>
               {t('event.location')}
             </Text>
-            <View style={styles.mapPlaceholder}>
-              <Text style={styles.mapText}>Map Preview</Text>
-              {event.location && (
-                <Text style={styles.coordinatesText}>
-                  📍 {event.location.latitude.toFixed(4)}, {event.location.longitude.toFixed(4)}
-                </Text>
-              )}
-            </View>
+            {event.location ? (
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: event.location.latitude,
+                  longitude: event.location.longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: event.location.latitude,
+                    longitude: event.location.longitude,
+                  }}
+                  title={event.name}
+                  description={event.venue}
+                />
+              </MapView>
+            ) : (
+              <View style={styles.mapPlaceholder}>
+                <Text style={styles.mapText}>{t('event.mapPreview')}</Text>
+                <Text style={styles.coordinatesText}>📍 --</Text>
+              </View>
+            )}
           </View>
 
-          {(event.description || event.info || event.pleaseNote) && (
-            <View style={styles.infoSection}>
-              <View style={styles.descriptionHeader}>
-                <Text style={[styles.descriptionTitle, isRTL && styles.rtlText]}>
-                  Description
-                </Text>
-                <TouchableOpacity 
-                  style={styles.expandButton}
-                  onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                >
-                  <Text style={styles.expandButtonText}>
-                    {isDescriptionExpanded ? 'Show Less' : 'Show More'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              
-              <View style={[styles.descriptionContainer, !isDescriptionExpanded && styles.descriptionCollapsed]}>
-                <Text style={[styles.descriptionText, isRTL && styles.rtlText]}>
-                  {stripHtml(event.description || event.info || event.pleaseNote || '')}
-                </Text>
-              </View>
-              
-              {!isDescriptionExpanded && (
-                <View style={styles.fadeOverlay} />
-              )}
+          <View style={styles.infoSection}>
+            <View style={styles.descriptionHeader}>
+              <Text style={[styles.descriptionTitle, isRTL && styles.rtlText]}>
+                {t('event.description')}
+              </Text>
+              {(() => {
+                const description = stripHtml(event.description || event.info || event.pleaseNote || '');
+                return description.length > 200 && (
+                  <TouchableOpacity 
+                    style={styles.expandButton}
+                    onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  >
+                    <Text style={styles.expandButtonText}>
+                      {isDescriptionExpanded ? t('common.showLess') : t('common.showMore')}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })()}
             </View>
-          )}
+            
+            <View style={[styles.descriptionContainer, !isDescriptionExpanded && styles.descriptionCollapsed]}>
+              <Text style={[styles.descriptionText, isRTL && styles.rtlText]}>
+                {(event.description || event.info || event.pleaseNote) ? stripHtml(event.description || event.info || event.pleaseNote || '') : '--'}
+              </Text>
+            </View>
+            
+            {(() => {
+              const description = stripHtml(event.description || event.info || event.pleaseNote || '');
+              return !isDescriptionExpanded && description.length > 200 && (
+                <View style={styles.fadeOverlay} />
+              );
+            })()}
+          </View>
 
         </View>
       </ScrollView>
@@ -325,6 +327,10 @@ const styles = StyleSheet.create({
   },
   mapSection: {
     marginBottom: 24,
+  },
+  map: {
+    height: 200,
+    borderRadius: SIZES.BORDER_RADIUS,
   },
   mapPlaceholder: {
     height: 150,

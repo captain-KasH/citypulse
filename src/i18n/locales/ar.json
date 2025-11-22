@@ -9,7 +9,9 @@
     "delete": "حذف",
     "edit": "تعديل",
     "search": "بحث",
-    "loadMore": "تحميل المزيد من الأحداث"
+    "loadMore": "تحميل المزيد من الأحداث",
+    "showMore": "عرض المزيد",
+    "showLess": "عرض أقل"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -34,7 +36,9 @@
     "price": "السعر",
     "location": "الموقع",
     "notFound": "الحدث غير موجود",
-    "loadingDetails": "جاري تحميل تفاصيل الحدث..."
+    "loadingDetails": "جاري تحميل تفاصيل الحدث...",
+    "description": "الوصف",
+    "mapPreview": "معاينة الخريطة"
   },
   "favorites": {
     "title": "المفضلة",

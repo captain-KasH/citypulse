@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import SkeletonLoader from '../../../components/SkeletonLoader';
+import EventCardSkeleton from '../../../components/EventCardSkeleton';
 import { COLORS } from '../../../utils/constants';
 
 interface EventListEmptyProps {
@@ -18,7 +18,7 @@ const EventListEmpty: React.FC<EventListEmptyProps> = ({
     return (
       <View>
         {[...Array(5)].map((_, index) => (
-          <SkeletonLoader key={index} />
+          <EventCardSkeleton key={index} />
         ))}
       </View>
     );

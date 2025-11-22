@@ -9,7 +9,9 @@
     "delete": "Delete",
     "edit": "Edit",
     "search": "Search",
-    "loadMore": "Load More Events"
+    "loadMore": "Load More Events",
+    "showMore": "Show More",
+    "showLess": "Show Less"
   },
   "auth": {
     "login": "Login",
@@ -35,7 +37,8 @@
     "location": "Location",
     "notFound": "Event Not Found",
     "loadingDetails": "Loading event details...",
-    "description": "Description"
+    "description": "Description",
+    "mapPreview": "Map Preview"
   },
   "favorites": {
     "title": "Favorites",
