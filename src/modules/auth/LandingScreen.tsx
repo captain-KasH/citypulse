@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -80,70 +80,80 @@ const LandingScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t('auth.welcomeTitle')}</Text>
-          <Text style={styles.subtitle}>{t('auth.welcomeSubtitle')}</Text>
-        </View>
+      <KeyboardAvoidingView 
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.title}>{t('auth.welcomeTitle')}</Text>
+              <Text style={styles.subtitle}>{t('auth.welcomeSubtitle')}</Text>
+            </View>
 
-        <View style={styles.formContainer}>
-          <Input
-            label={t('auth.email')}
-            placeholder={t('auth.enterEmail')}
-            value={email}
-            onChangeText={setEmail}
-          />
-          
-          <Input
-            label={t('auth.password')}
-            placeholder={t('auth.enterPassword')}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+            <View style={styles.formContainer}>
+              <Input
+                label={t('auth.email')}
+                placeholder={t('auth.enterEmail')}
+                value={email}
+                onChangeText={setEmail}
+              />
+              
+              <Input
+                label={t('auth.password')}
+                placeholder={t('auth.enterPassword')}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
 
-          <Button
-            title={t('auth.login')}
-            onPress={handleLogin}
-            loading={loading}
-            style={styles.loginButton}
-          />
-          
-          <Button
-            title={t('auth.guestMode')}
-            onPress={handleGuestLogin}
-            variant="secondary"
-            style={styles.button}
-          />
-          
-          {biometricAvailable && biometricEnabled && (
-            <Button
-              title={t('auth.biometricLogin')}
-              onPress={handleBiometricLogin}
-              variant="outline"
-              style={styles.button}
-            />
-          )}
-          
-          <Button
-            title={t('auth.signInGoogle')}
-            onPress={() => {/* Placeholder for Phase 2 */}}
-            variant="outline"
-            style={[styles.button, styles.googleButton]}
-            disabled
-          />
-          
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>{t('auth.noAccount')} </Text>
-            <Text 
-              style={styles.signupLink}
-              onPress={() => navigation.navigate('SignUp' as never)}
-            >
-              {t('auth.registerHere')}
-            </Text>
+              <Button
+                title={t('auth.login')}
+                onPress={handleLogin}
+                loading={loading}
+                style={styles.loginButton}
+              />
+              
+              <Button
+                title={t('auth.guestMode')}
+                onPress={handleGuestLogin}
+                variant="secondary"
+                style={styles.button}
+              />
+              
+              {biometricAvailable && biometricEnabled && (
+                <Button
+                  title={t('auth.biometricLogin')}
+                  onPress={handleBiometricLogin}
+                  variant="outline"
+                  style={styles.button}
+                />
+              )}
+              
+              <Button
+                title={t('auth.signInGoogle')}
+                onPress={() => {/* Placeholder for Phase 2 */}}
+                variant="outline"
+                style={[styles.button, styles.googleButton]}
+                disabled
+              />
+              
+              <View style={styles.signupContainer}>
+                <Text style={styles.signupText}>{t('auth.noAccount')} </Text>
+                <Text 
+                  style={styles.signupLink}
+                  onPress={() => navigation.navigate('SignUp' as never)}
+                >
+                  {t('auth.registerHere')}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -153,10 +163,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
-  content: {
+  keyboardContainer: {
     flex: 1,
-    paddingHorizontal: SIZES.PADDING * 2,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+  },
+  content: {
+    paddingHorizontal: SIZES.PADDING * 2,
+    paddingVertical: 20,
   },
   header: {
     alignItems: 'center',

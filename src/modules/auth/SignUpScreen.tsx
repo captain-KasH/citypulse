@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -51,48 +51,58 @@ const SignUpScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join City Pulse today</Text>
+      <KeyboardAvoidingView 
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
+            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.subtitle}>Join City Pulse today</Text>
 
-        <View style={styles.form}>
-          <Input
-            label="Full Name"
-            placeholder="Enter your full name"
-            value={name}
-            onChangeText={setName}
-          />
-          
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-          />
-          
-          <Input
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+            <View style={styles.form}>
+              <Input
+                label="Full Name"
+                placeholder="Enter your full name"
+                value={name}
+                onChangeText={setName}
+              />
+              
+              <Input
+                label="Email"
+                placeholder="Enter your email"
+                value={email}
+                onChangeText={setEmail}
+              />
+              
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
 
-          <Button
-            title="Sign Up"
-            onPress={handleSignUp}
-            loading={loading}
-            style={styles.signUpButton}
-          />
+              <Button
+                title="Sign Up"
+                onPress={handleSignUp}
+                loading={loading}
+                style={styles.signUpButton}
+              />
 
-          <Button
-            title="Back to Landing"
-            onPress={() => navigation.goBack()}
-            variant="outline"
-            style={styles.backButton}
-          />
-        </View>
-      </View>
+              <Button
+                title="Back to Landing"
+                onPress={() => navigation.goBack()}
+                variant="outline"
+                style={styles.backButton}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -102,10 +112,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
-  content: {
+  keyboardContainer: {
     flex: 1,
-    paddingHorizontal: SIZES.PADDING * 2,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+  },
+  content: {
+    paddingHorizontal: SIZES.PADDING * 2,
+    paddingVertical: 20,
   },
   title: {
     fontSize: 24,
