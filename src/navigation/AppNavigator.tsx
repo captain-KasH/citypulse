@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
@@ -22,18 +22,34 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  const { hasSeenSplash } = useSelector((state: RootState) => state.app);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showSplash) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Splash" component={SplashScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={hasSeenSplash ? (isAuthenticated ? 'MainTabs' : 'Landing') : 'Splash'}
+        initialRouteName={isAuthenticated ? 'MainTabs' : 'Landing'}
         screenOptions={{
           headerShown: false,
         }}
       >
-        {!hasSeenSplash && <Stack.Screen name="Splash" component={SplashScreen} />}
-        
         {!isAuthenticated ? (
           <>
             <Stack.Screen name="Landing" component={LandingScreen} />

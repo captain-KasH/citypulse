@@ -32,11 +32,14 @@ const appSlice = createSlice({
     setSplashSeen: (state) => {
       state.hasSeenSplash = true;
     },
+    resetSplash: (state) => {
+      state.hasSeenSplash = false;
+    },
     setBiometricEnabled: (state, action: PayloadAction<boolean>) => {
       state.biometricEnabled = action.payload;
     },
   },
 });
 
-export const { setLanguage, setTheme, setSplashSeen, setBiometricEnabled } = appSlice.actions;
+export const { setLanguage, setTheme, setSplashSeen, setBiometricEnabled, resetSplash } = appSlice.actions;
 export default appSlice.reducer;
