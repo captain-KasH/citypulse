@@ -1,34 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../auth/redux/authSlice';
-import { setLanguage } from '../app/redux/appSlice';
+import { setLanguage, setBiometricEnabled } from '../app/redux/appSlice';
 import { mockAuthService } from '../auth/mockAuth';
+import { biometricService } from '../../services/biometric';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import { COLORS, SIZES } from '../../utils/constants';
 
 const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { favorites } = useSelector((state: RootState) => state.event);
-  const { language } = useSelector((state: RootState) => state.app);
-  const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const { language, biometricEnabled } = useSelector((state: RootState) => state.app);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+
+  useEffect(() => {
+    checkBiometricAvailability();
+  }, []);
+
+  const checkBiometricAvailability = async () => {
+    const result = await biometricService.isBiometricAvailable();
+    setBiometricAvailable(result.success);
+  };
 
   const handleLogout = async () => {
     Alert.alert(
-      language === 'en' ? 'Logout' : 'تسجيل الخروج',
-      language === 'en' ? 'Are you sure you want to logout?' : 'هل أنت متأكد من تسجيل الخروج؟',
+      t('auth.logout'),
+      t('profile.logoutConfirm'),
       [
         {
-          text: language === 'en' ? 'Cancel' : 'إلغاء',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: language === 'en' ? 'Logout' : 'تسجيل الخروج',
+          text: t('auth.logout'),
           style: 'destructive',
           onPress: async () => {
             await mockAuthService.logout();
@@ -39,14 +49,39 @@ const ProfileScreen: React.FC = () => {
     );
   };
 
-  const handleBiometricToggle = (value: boolean) => {
-    if (user?.isGuest) return;
-    setBiometricEnabled(value);
-    // Placeholder for Phase 2
-    Alert.alert(
-      'Coming Soon',
-      'Biometric authentication will be available in Phase 2'
-    );
+  const handleBiometricToggle = async (value: boolean) => {
+    if (user?.isGuest || !biometricAvailable) return;
+    
+    if (value) {
+      // Enable biometric - require authentication first
+      const result = await biometricService.authenticate(t('profile.enableBiometricPrompt'));
+      if (result.success) {
+        dispatch(setBiometricEnabled(true));
+        Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
+      } else {
+        Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));
+      }
+    } else {
+      // Disable biometric
+      Alert.alert(
+        t('profile.disableBiometric'),
+        t('profile.disableBiometricConfirm'),
+        [
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
+          },
+          {
+            text: t('profile.disable'),
+            style: 'destructive',
+            onPress: () => {
+              dispatch(setBiometricEnabled(false));
+              Alert.alert(t('profile.biometricDisabled'), t('profile.biometricDisabledMessage'));
+            },
+          },
+        ]
+      );
+    }
   };
 
 
@@ -56,7 +91,7 @@ const ProfileScreen: React.FC = () => {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.title}>
-            {language === 'en' ? 'Profile' : 'الملف الشخصي'}
+            {t('profile.title')}
           </Text>
         </View>
 
@@ -67,21 +102,21 @@ const ProfileScreen: React.FC = () => {
             </Text>
           </View>
           <Text style={styles.userName}>
-            {user?.isGuest ? (language === 'en' ? 'Guest User' : 'مستخدم ضيف') : user?.name}
+            {user?.isGuest ? t('profile.guestUser') : user?.name}
           </Text>
           <Text style={styles.userEmail}>
-            {user?.isGuest ? (language === 'en' ? 'Not logged in' : 'غير مسجل الدخول') : user?.email}
+            {user?.isGuest ? t('profile.notLoggedIn') : user?.email}
           </Text>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {language === 'en' ? 'Settings' : 'الإعدادات'}
+            {t('profile.settings')}
           </Text>
           
           <View style={styles.settingItem}>
             <Text style={styles.settingLabel}>
-              {language === 'en' ? 'Language' : 'اللغة'}
+              {t('profile.language')}
             </Text>
             <TouchableOpacity 
               style={styles.languageToggle}
@@ -93,14 +128,26 @@ const ProfileScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
           
-          <View style={[styles.settingItem, user?.isGuest && styles.disabledItem]}>
-            <Text style={[styles.settingLabel, user?.isGuest && styles.disabledText]}>
-              {language === 'en' ? 'Biometric Login' : 'المصادقة البيومترية'}
-            </Text>
+          <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest) && styles.disabledItem]}>
+            <View style={styles.settingLabelContainer}>
+              <Text style={[styles.settingLabel, (!biometricAvailable || user?.isGuest) && styles.disabledText]}>
+                {t('profile.biometricLogin')}
+              </Text>
+              {!biometricAvailable && (
+                <Text style={[styles.settingSubtext, styles.warningText]}>
+                  {t('profile.notSupported')}
+                </Text>
+              )}
+              {user?.isGuest && biometricAvailable && (
+                <Text style={[styles.settingSubtext, styles.warningText]}>
+                  {t('profile.loginRequired')}
+                </Text>
+              )}
+            </View>
             <Switch
-              value={biometricEnabled}
+              value={biometricEnabled && biometricAvailable}
               onValueChange={handleBiometricToggle}
-              disabled={user?.isGuest}
+              disabled={!biometricAvailable || user?.isGuest}
               trackColor={{ false: COLORS.LIGHT_GRAY, true: COLORS.PRIMARY }}
               thumbColor={COLORS.WHITE}
             />
@@ -111,7 +158,7 @@ const ProfileScreen: React.FC = () => {
       
       <View style={styles.logoutContainer}>
         <Button
-          title={language === 'en' ? 'Logout' : 'تسجيل الخروج'}
+          title={t('auth.logout')}
           onPress={handleLogout}
           variant="outline"
           style={[styles.actionButton, styles.logoutButton]}
@@ -190,6 +237,17 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: COLORS.BLACK,
+  },
+  settingLabelContainer: {
+    flex: 1,
+  },
+  settingSubtext: {
+    fontSize: 12,
+    color: COLORS.GRAY,
+    marginTop: 2,
+  },
+  warningText: {
+    color: COLORS.ERROR,
   },
   languageToggle: {
     paddingHorizontal: 12,

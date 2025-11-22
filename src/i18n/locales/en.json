@@ -34,7 +34,9 @@
     "enterValidEmail": "Please enter a valid email address",
     "loginFailed": "Login Failed",
     "tryAgain": "Please try again",
-    "guest": "Guest"
+    "guest": "Guest",
+    "biometricPrompt": "Use your fingerprint or face to authenticate",
+    "biometricFailed": "Biometric Authentication Failed"
   },
   "home": {
     "title": "CityPulse",
@@ -74,6 +76,20 @@
     "settings": "Settings",
     "language": "Language",
     "notifications": "Notifications",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "guestUser": "Guest User",
+    "notLoggedIn": "Not logged in",
+    "biometricLogin": "Biometric Login",
+    "logoutConfirm": "Are you sure you want to logout?",
+    "enableBiometricPrompt": "Authenticate to enable biometric login",
+    "biometricEnabled": "Biometric Login Enabled",
+    "biometricEnabledMessage": "You can now use biometric authentication to login",
+    "disableBiometric": "Disable Biometric Login",
+    "disableBiometricConfirm": "Are you sure you want to disable biometric login?",
+    "disable": "Disable",
+    "biometricDisabled": "Biometric Login Disabled",
+    "biometricDisabledMessage": "Biometric authentication has been disabled",
+    "notSupported": "Not supported on this device",
+    "loginRequired": "Login required"
   }
 }

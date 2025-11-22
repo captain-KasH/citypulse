@@ -24,7 +24,7 @@ export const SIZES = {
 // ToDo:: move to .env
 export const API_CONFIG = {
   TICKETMASTER_BASE_URL: 'https://app.ticketmaster.com/discovery/v2',
-  TICKETMASTER_API_KEY: '',
+  TICKETMASTER_API_KEY: 'SRZnhFZZ6DixEUKaLPDsfR4HNhKQ9Sou',
 };
 
 export const STORAGE_KEYS = {

@@ -2,21 +2,47 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { mockAuthService } from './mockAuth';
 import { loginSuccess } from '../../store/slices/authSlice';
+import { biometricService } from '../../services/biometric';
 import { COLORS, SIZES } from '../../utils/constants';
 
 const LandingScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { biometricEnabled } = useSelector((state: RootState) => state.app);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+
+  React.useEffect(() => {
+    checkBiometricAvailability();
+  }, []);
+
+  const checkBiometricAvailability = async () => {
+    const result = await biometricService.isBiometricAvailable();
+    setBiometricAvailable(result.success);
+  };
+
+  const handleBiometricLogin = async () => {
+    const result = await biometricService.authenticate(t('auth.biometricPrompt'));
+    if (result.success) {
+      // For demo purposes, login as guest after successful biometric auth
+      const authResult = await mockAuthService.loginAsGuest();
+      if (authResult.success && authResult.user) {
+        dispatch(loginSuccess(authResult.user));
+      }
+    } else {
+      Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));
+    }
+  };
 
   const handleGuestLogin = async () => {
     const result = await mockAuthService.loginAsGuest();
@@ -89,6 +115,15 @@ const LandingScreen: React.FC = () => {
             variant="secondary"
             style={styles.button}
           />
+          
+          {biometricAvailable && biometricEnabled && (
+            <Button
+              title={t('auth.biometricLogin')}
+              onPress={handleBiometricLogin}
+              variant="outline"
+              style={styles.button}
+            />
+          )}
           
           <Button
             title={t('auth.signInGoogle')}

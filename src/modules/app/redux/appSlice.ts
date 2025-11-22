@@ -6,6 +6,7 @@ interface AppState {
   isRTL: boolean;
   theme: 'light' | 'dark';
   hasSeenSplash: boolean;
+  biometricEnabled: boolean;
 }
 
 const initialState: AppState = {
@@ -13,6 +14,7 @@ const initialState: AppState = {
   isRTL: false,
   theme: 'light',
   hasSeenSplash: false,
+  biometricEnabled: false,
 };
 
 const appSlice = createSlice({
@@ -30,8 +32,11 @@ const appSlice = createSlice({
     setSplashSeen: (state) => {
       state.hasSeenSplash = true;
     },
+    setBiometricEnabled: (state, action: PayloadAction<boolean>) => {
+      state.biometricEnabled = action.payload;
+    },
   },
 });
 
-export const { setLanguage, setTheme, setSplashSeen } = appSlice.actions;
+export const { setLanguage, setTheme, setSplashSeen, setBiometricEnabled } = appSlice.actions;
 export default appSlice.reducer;

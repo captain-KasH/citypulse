@@ -34,7 +34,9 @@
     "enterValidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
     "loginFailed": "فشل تسجيل الدخول",
     "tryAgain": "يرجى المحاولة مرة أخرى",
-    "guest": "ضيف"
+    "guest": "ضيف",
+    "biometricPrompt": "استخدم بصمة إصبعك أو وجهك للمصادقة",
+    "biometricFailed": "فشلت المصادقة البيومترية"
   },
   "home": {
     "title": "نبض المدينة",
@@ -74,6 +76,20 @@
     "settings": "الإعدادات",
     "language": "اللغة",
     "notifications": "الإشعارات",
-    "privacy": "الخصوصية"
+    "privacy": "الخصوصية",
+    "guestUser": "مستخدم ضيف",
+    "notLoggedIn": "غير مسجل الدخول",
+    "biometricLogin": "المصادقة البيومترية",
+    "logoutConfirm": "هل أنت متأكد من تسجيل الخروج؟",
+    "enableBiometricPrompt": "المصادقة لتفعيل تسجيل الدخول البيومتري",
+    "biometricEnabled": "تم تفعيل المصادقة البيومترية",
+    "biometricEnabledMessage": "يمكنك الآن استخدام المصادقة البيومترية لتسجيل الدخول",
+    "disableBiometric": "إلغاء المصادقة البيومترية",
+    "disableBiometricConfirm": "هل أنت متأكد من إلغاء المصادقة البيومترية؟",
+    "disable": "إلغاء",
+    "biometricDisabled": "تم إلغاء المصادقة البيومترية",
+    "biometricDisabledMessage": "تم إلغاء المصادقة البيومترية",
+    "notSupported": "غير مدعوم على هذا الجهاز",
+    "loginRequired": "تسجيل الدخول مطلوب"
   }
 }
