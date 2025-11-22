@@ -128,8 +128,6 @@ The app uses Ticketmaster API for real event data. To get your free API key:
 2. Sign up and get your Consumer Key
 3. Replace the API key in `src/utils/constants.ts`
 
-See `API_SETUP.md` for detailed instructions.
-
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
