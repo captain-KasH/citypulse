@@ -1,0 +1,53 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "loadMore": "Load More Events"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "loginRequired": "Login Required",
+    "pleaseLogin": "Please login to add favorites",
+    "biometricLogin": "Use Biometric Login",
+    "guestMode": "Continue as Guest"
+  },
+  "home": {
+    "title": "CityPulse",
+    "searchPlaceholder": "Search events...",
+    "upcomingEvents": "Upcoming Events",
+    "noEvents": "No events found",
+    "nearbyEvents": "Nearby Events"
+  },
+  "event": {
+    "details": "Event Details",
+    "date": "Date",
+    "venue": "Venue",
+    "city": "City",
+    "price": "Price",
+    "location": "Location",
+    "notFound": "Event Not Found",
+    "loadingDetails": "Loading event details...",
+    "description": "Description"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "noFavorites": "No favorite events yet",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy"
+  }
+}

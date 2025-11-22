@@ -1,0 +1,52 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "ok": "موافق",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "search": "بحث",
+    "loadMore": "تحميل المزيد من الأحداث"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "pleaseLogin": "يرجى تسجيل الدخول لإضافة المفضلة",
+    "biometricLogin": "استخدام تسجيل الدخول البيومتري",
+    "guestMode": "المتابعة كضيف"
+  },
+  "home": {
+    "title": "نبض المدينة",
+    "searchPlaceholder": "البحث عن الأحداث...",
+    "upcomingEvents": "الأحداث القادمة",
+    "noEvents": "لم يتم العثور على أحداث",
+    "nearbyEvents": "الأحداث القريبة"
+  },
+  "event": {
+    "details": "تفاصيل الحدث",
+    "date": "التاريخ",
+    "venue": "المكان",
+    "city": "المدينة",
+    "price": "السعر",
+    "location": "الموقع",
+    "notFound": "الحدث غير موجود",
+    "loadingDetails": "جاري تحميل تفاصيل الحدث..."
+  },
+  "favorites": {
+    "title": "المفضلة",
+    "noFavorites": "لا توجد أحداث مفضلة بعد",
+    "addToFavorites": "إضافة إلى المفضلة",
+    "removeFromFavorites": "إزالة من المفضلة"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "privacy": "الخصوصية"
+  }
+}
