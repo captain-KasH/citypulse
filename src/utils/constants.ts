@@ -21,7 +21,7 @@ export const SIZES = {
   HEADER_HEIGHT: 60,
 };
 
-// ToDo:: move to .env
+// ToDo:: move to .env, for the moment I'm keeping here.
 export const API_CONFIG = {
   TICKETMASTER_BASE_URL: 'https://app.ticketmaster.com/discovery/v2',
   TICKETMASTER_API_KEY: 'SRZnhFZZ6DixEUKaLPDsfR4HNhKQ9Sou',
