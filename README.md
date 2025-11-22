@@ -1,8 +1,32 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# Installation
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+
+## Install Dependencies
+
+```sh
+# Install npm dependencies (use legacy-peer-deps if npm install fails)
+npm install
+
+# OR if npm install fails, try:
+npm install --legacy-peer-deps
+```
+
+### iOS Setup
+
+The postinstall script will automatically install iOS pods after npm install. If it doesn't work, manually install pods:
+
+```sh
+# Navigate to iOS directory and install pods
+cd ios && pod install && cd ..
+
+# OR use the npm script
+npm run pods
+```
+
+# Getting Started
 
 ## Step 1: Start Metro
 
@@ -85,6 +109,16 @@ You've successfully run and modified your React Native App. :partying_face:
 # Troubleshooting
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+# API Setup
+
+The app uses Ticketmaster API for real event data. To get your free API key:
+
+1. Visit [Ticketmaster Developer Portal](https://developer.ticketmaster.com/)
+2. Sign up and get your Consumer Key
+3. Replace the API key in `src/utils/constants.ts`
+
+See `API_SETUP.md` for detailed instructions.
 
 # Learn More
 
