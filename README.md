@@ -245,6 +245,24 @@ The app uses Ticketmaster API for real event data. To get your free API key:
 The project includes automated CI/CD pipeline configured in `.github/workflows/ci.yml`:
 
 ### **Triggers**
+- **Push**: Runs on any branch push
+- **Pull Request**: Runs on PRs to `main` and `develop`
+
+### **Pipeline Steps**
+1. **Checkout Code**: Uses `actions/checkout@v4`
+2. **Setup Node.js**: Installs Node.js 18 with npm caching
+3. **Install Dependencies**: Runs `npm install --legacy-peer-deps`
+4. **Linting**: Executes `npm run lint` for code quality
+5. **Testing**: Runs `npm test` for unit tests
+6. **Type Checking**: Validates TypeScript with `npx tsc --noEmit`
+
+# CI/CD Pipeline
+
+## GitHub Actions Workflow
+
+The project includes automated CI/CD pipeline configured in `.github/workflows/ci.yml`:
+
+### **Triggers**
 - **Push**: Runs on `main` and `develop` branches
 - **Pull Request**: Runs on PRs to `main` and `develop`
 
