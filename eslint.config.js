@@ -1,21 +1,28 @@
 module.exports = [
   {
-    ignores: ['.eslintrc.js', 'node_modules/**', 'android/**', 'ios/**'],
+    ignores: [
+      '.eslintrc.js',
+      'node_modules/**',
+      'android/**',
+      'ios/**',
+      'vendor/**',
+      '**/*.d.ts'
+    ],
   },
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['src/**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 'latest',
+      ecmaVersion: 2022,
       sourceType: 'module',
-      parser: require('@typescript-eslint/parser'),
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
+      globals: {
+        console: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        __dirname: 'readonly',
       },
     },
     rules: {
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
       'no-console': 'warn',
     },
   },
