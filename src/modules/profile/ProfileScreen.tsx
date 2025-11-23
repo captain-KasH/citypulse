@@ -11,6 +11,7 @@ import { keychainService } from '../../services/keychain';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import LanguageToggle from '../../components/LanguageToggle';
+
 import { COLORS, SIZES } from '../../utils/constants';
 
 const ProfileScreen: React.FC = () => {
@@ -20,13 +21,21 @@ const ProfileScreen: React.FC = () => {
   const { language, biometricEnabled } = useSelector((state: RootState) => state.app);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
 
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
+
   useEffect(() => {
     checkBiometricAvailability();
+    checkAuthMethod();
   }, []);
 
   const checkBiometricAvailability = async () => {
     const result = await biometricService.isBiometricAvailable();
     setBiometricAvailable(result.success);
+  };
+
+  const checkAuthMethod = async () => {
+    const authMethod = await keychainService.getAuthMethod();
+    setIsGoogleUser(authMethod === 'google');
   };
 
   const handleLogout = async () => {
@@ -42,7 +51,8 @@ const ProfileScreen: React.FC = () => {
           text: t('auth.logout'),
           style: 'destructive',
           onPress: async () => {
-            await firebaseAuthService.logout();
+            // Only clear credentials if biometric is not enabled
+            await firebaseAuthService.logout(!biometricEnabled);
             dispatch(logout());
           },
         },
@@ -53,11 +63,31 @@ const ProfileScreen: React.FC = () => {
   const handleBiometricToggle = async (value: boolean) => {
     if (user?.isGuest || !biometricAvailable) return;
     
+    // Check if user is using Google Sign-In
+    const authMethod = await keychainService.getAuthMethod();
+    if (authMethod === 'google') {
+      Alert.alert(
+        t('profile.biometricNotAvailable'),
+        t('profile.biometricEmailOnly')
+      );
+      return;
+    }
+    
     if (value) {
-      // Enable biometric - require authentication first
+      // Check if user has existing credentials stored
+      const existingCredentials = await keychainService.getUserCredentials();
+      
+      if (!existingCredentials) {
+        Alert.alert(
+          t('profile.biometricSetup'),
+          t('profile.biometricSetupMessage')
+        );
+        return;
+      }
+      
+      // For email users, authenticate with biometrics first
       const result = await biometricService.authenticate(t('profile.enableBiometricPrompt'));
       if (result.success) {
-        // Enable biometric for all authenticated users
         dispatch(setBiometricEnabled(true));
         Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
       } else {
@@ -85,6 +115,8 @@ const ProfileScreen: React.FC = () => {
       );
     }
   };
+
+
 
 
 
@@ -127,9 +159,9 @@ const ProfileScreen: React.FC = () => {
             <LanguageToggle displayCurrent />
           </View>
           
-          <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest) && styles.disabledItem]}>
+          <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest || isGoogleUser) && styles.disabledItem]}>
             <View style={styles.settingLabelContainer}>
-              <Text style={[styles.settingLabel, (!biometricAvailable || user?.isGuest) && styles.disabledText]}>
+              <Text style={[styles.settingLabel, (!biometricAvailable || user?.isGuest || isGoogleUser) && styles.disabledText]}>
                 {t('profile.biometricLogin')}
               </Text>
               {!biometricAvailable && (
@@ -142,11 +174,16 @@ const ProfileScreen: React.FC = () => {
                   {t('profile.loginRequired')}
                 </Text>
               )}
+              {isGoogleUser && biometricAvailable && !user?.isGuest && (
+                <Text style={[styles.settingSubtext, styles.warningText]}>
+                  {t('profile.biometricEmailOnly')}
+                </Text>
+              )}
             </View>
             <Switch
-              value={biometricEnabled && biometricAvailable}
+              value={biometricEnabled && biometricAvailable && !isGoogleUser}
               onValueChange={handleBiometricToggle}
-              disabled={!biometricAvailable || user?.isGuest}
+              disabled={!biometricAvailable || user?.isGuest || isGoogleUser}
               trackColor={{ false: COLORS.LIGHT_GRAY, true: COLORS.PRIMARY }}
               thumbColor={COLORS.WHITE}
             />
@@ -154,6 +191,8 @@ const ProfileScreen: React.FC = () => {
         </View>
 
       </ScrollView>
+      
+
       
       <View style={styles.logoutContainer}>
         <Button
@@ -260,10 +299,7 @@ const styles = StyleSheet.create({
   disabledText: {
     color: COLORS.GRAY,
   },
-  disabledToggle: {
-    backgroundColor: COLORS.LIGHT_GRAY,
-    opacity: 0.5,
-  },
+
   logoutContainer: {
     paddingHorizontal: SIZES.PADDING,
     paddingBottom: 32,
@@ -277,27 +313,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     borderColor: COLORS.ERROR,
   },
-  guestContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: SIZES.PADDING * 2,
-  },
-  guestTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.BLACK,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  guestMessage: {
-    fontSize: 16,
-    color: COLORS.GRAY,
-    textAlign: 'center',
-    marginBottom: 40,
-  },
-  guestActions: {
-    gap: 16,
-  },
+
 });
 
 export default ProfileScreen;

@@ -94,7 +94,7 @@ export const firebaseAuthService = {
     }
   },
 
-  async logout(): Promise<boolean> {
+  async logout(clearCredentials: boolean = false): Promise<boolean> {
     try {
       // Check if user signed in with Google and sign out from Google
       const authMethod = await keychainService.getAuthMethod();
@@ -105,8 +105,10 @@ export const firebaseAuthService = {
       // Sign out from Firebase
       await auth().signOut();
       
-      // Clear stored credentials and auth method
-      await keychainService.clearUserCredentials();
+      // Only clear stored credentials if explicitly requested
+      if (clearCredentials) {
+        await keychainService.clearUserCredentials();
+      }
       
       return true;
     } catch (error) {
@@ -143,6 +145,8 @@ export const firebaseAuthService = {
       return { success: false, error: 'Google Sign-In failed' };
     }
   },
+
+
 
   onAuthStateChanged(callback: (user: FirebaseAuthTypes.User | null) => void) {
     return auth().onAuthStateChanged(callback);

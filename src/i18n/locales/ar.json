@@ -36,7 +36,9 @@
     "tryAgain": "يرجى المحاولة مرة أخرى",
     "guest": "ضيف",
     "biometricPrompt": "استخدم بصمة إصبعك أو وجهك للمصادقة",
-    "biometricFailed": "فشلت المصادقة البيومترية"
+    "biometricFailed": "فشلت المصادقة البيومترية",
+    "noStoredCredentials": "لم يتم العثور على بيانات اعتماد مخزنة",
+    "storedCredentialsInvalid": "بيانات الاعتماد المخزنة غير صحيحة"
   },
   "home": {
     "title": "نبض المدينة",
@@ -95,6 +97,15 @@
     "biometricDisabled": "تم إلغاء المصادقة البيومترية",
     "biometricDisabledMessage": "تم إلغاء المصادقة البيومترية",
     "notSupported": "غير مدعوم على هذا الجهاز",
-    "loginRequired": "تسجيل الدخول مطلوب"
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "biometricSetup": "إعداد المصادقة البيومترية",
+    "biometricSetupMessage": "لتفعيل المصادقة البيومترية، تحتاج لحفظ بياناتك بشكل آمن. هل تريد إعداد ذلك الآن؟",
+    "setupNow": "إعداد الآن",
+    "enterCredentials": "أدخل البريد الإلكتروني",
+    "enterCredentialsMessage": "أدخل عنوان بريدك الإلكتروني للمصادقة البيومترية:",
+    "enterPasswordMessage": "أدخل كلمة المرور للمصادقة البيومترية:",
+    "credentialsStored": "تم حفظ البيانات بأمان. تم تفعيل المصادقة البيومترية.",
+    "biometricNotAvailable": "المصادقة البيومترية غير متاحة",
+    "biometricEmailOnly": "المصادقة البيومترية متاحة فقط لتسجيل الدخول بالبريد الإلكتروني في الوقت الحالي"
   }
 }
