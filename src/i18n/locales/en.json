@@ -63,7 +63,8 @@
     "notFound": "Event Not Found",
     "loadingDetails": "Loading event details...",
     "description": "Description",
-    "mapPreview": "Map Preview"
+    "mapPreview": "Map Preview",
+    "mapUnavailable": "Map unavailable"
   },
   "favorites": {
     "title": "Favorites",

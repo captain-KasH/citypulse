@@ -70,7 +70,7 @@ export const firebaseAuthService = {
 
       return { success: true, user };
     } catch (error: any) {
-      console.log('signUp error', error.message);
+      console.error('signUp error', error.message);
       return { success: false, error: error.message };
     }
   },
@@ -123,7 +123,7 @@ export const firebaseAuthService = {
 
       return { success: true, user };
     } catch (error: any) {
-      console.log('signInWithGoogle error', error.message);
+      console.error('signInWithGoogle error', error.message);
       return { success: false, error: error.message };
     }
   },

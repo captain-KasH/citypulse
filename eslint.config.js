@@ -27,7 +27,7 @@ module.exports = [
     },
     rules: {
       'no-unused-vars': 'off',
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['error'] }],
     },
   },
   {
@@ -44,7 +44,7 @@ module.exports = [
     },
     rules: {
       'no-unused-vars': 'off',
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['error'] }],
     },
   },
 ];

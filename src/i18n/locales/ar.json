@@ -63,7 +63,8 @@
     "notFound": "الحدث غير موجود",
     "loadingDetails": "جاري تحميل تفاصيل الحدث...",
     "description": "الوصف",
-    "mapPreview": "معاينة الخريطة"
+    "mapPreview": "معاينة الخريطة",
+    "mapUnavailable": "الخريطة غير متاحة"
   },
   "favorites": {
     "title": "المفضلة",
