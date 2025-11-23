@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../auth/redux/authSlice';
-import { setLanguage, setBiometricEnabled } from '../app/redux/appSlice';
+import { setBiometricEnabled } from '../app/redux/appSlice';
 import { firebaseAuthService } from '../../services/firebaseAuth';
 import { biometricService } from '../../services/biometric';
 import { keychainService } from '../../services/keychain';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
+import LanguageToggle from '../../components/LanguageToggle';
 import { COLORS, SIZES } from '../../utils/constants';
 
 const ProfileScreen: React.FC = () => {
@@ -137,14 +137,7 @@ const ProfileScreen: React.FC = () => {
             <Text style={styles.settingLabel}>
               {t('profile.language')}
             </Text>
-            <TouchableOpacity 
-              style={styles.languageToggle}
-              onPress={() => dispatch(setLanguage(language === 'en' ? 'ar' : 'en'))}
-            >
-              <Text style={styles.languageText}>
-                {language === 'en' ? 'English' : 'عربي'}
-              </Text>
-            </TouchableOpacity>
+            <LanguageToggle />
           </View>
           
           <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest) && styles.disabledItem]}>
@@ -268,17 +261,7 @@ const styles = StyleSheet.create({
   warningText: {
     color: COLORS.ERROR,
   },
-  languageToggle: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: COLORS.LIGHT_GRAY,
-    borderRadius: 16,
-  },
-  languageText: {
-    fontSize: 14,
-    color: COLORS.PRIMARY,
-    fontWeight: '600',
-  },
+
   disabledItem: {
     opacity: 0.5,
   },

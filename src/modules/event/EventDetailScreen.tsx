@@ -7,11 +7,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '../../store';
 import { useFavorites } from '../../hooks/useFavorites';
-import { setLanguage } from '../app/redux/appSlice';
+
 import { getEventDetails } from '../../services/api/ticketmaster';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
 import EventDetailSkeleton from '../../components/EventDetailSkeleton';
+import LanguageToggle from '../../components/LanguageToggle';
 import { COLORS, SIZES } from '../../utils/constants';
 import { stripHtml } from '../../utils/stringUtils';
 import { formatDateWithLocale, getLocaleFromLanguage } from '../../utils/dateTimeUtils';
@@ -96,16 +97,7 @@ const EventDetailScreen: React.FC = () => {
     );
   }
 
-  const LanguageToggle = () => (
-    <TouchableOpacity 
-      style={styles.languageButton}
-      onPress={() => dispatch(setLanguage(language === 'en' ? 'ar' : 'en'))}
-    >
-      <Text style={styles.languageText}>
-        {language === 'en' ? 'عربي' : 'EN'}
-      </Text>
-    </TouchableOpacity>
-  );
+
 
   return (
     <SafeAreaView style={[styles.container, isRTL && styles.rtlContainer]}>
@@ -416,17 +408,7 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR,
     textAlign: 'center',
   },
-  languageButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: COLORS.LIGHT_GRAY,
-    borderRadius: 16,
-  },
-  languageText: {
-    fontSize: 14,
-    color: COLORS.PRIMARY,
-    fontWeight: '600',
-  },
+
 });
 
 export default EventDetailScreen;
