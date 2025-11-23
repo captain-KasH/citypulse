@@ -8,6 +8,7 @@ import { logout } from '../auth/redux/authSlice';
 import { setLanguage, setBiometricEnabled } from '../app/redux/appSlice';
 import { firebaseAuthService } from '../../services/firebaseAuth';
 import { biometricService } from '../../services/biometric';
+import { keychainService } from '../../services/keychain';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import { COLORS, SIZES } from '../../utils/constants';
@@ -56,8 +57,26 @@ const ProfileScreen: React.FC = () => {
       // Enable biometric - require authentication first
       const result = await biometricService.authenticate(t('profile.enableBiometricPrompt'));
       if (result.success) {
-        dispatch(setBiometricEnabled(true));
-        Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
+        // Check if credentials are already stored
+        const existingCredentials = await keychainService.getUserCredentials();
+        if (!existingCredentials) {
+          Alert.alert(
+            t('profile.biometricEnabled'),
+            'Please login again with your email and password to enable biometric authentication.',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  dispatch(setBiometricEnabled(true));
+                  dispatch(logout());
+                }
+              }
+            ]
+          );
+        } else {
+          dispatch(setBiometricEnabled(true));
+          Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
+        }
       } else {
         Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));
       }

@@ -22,6 +22,8 @@ const LandingScreen: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
 
   React.useEffect(() => {
@@ -34,6 +36,7 @@ const LandingScreen: React.FC = () => {
   };
 
   const handleBiometricLogin = async () => {
+    setBiometricLoading(true);
     const result = await biometricService.authenticate(t('auth.biometricPrompt'));
     if (result.success) {
       // Try to get stored credentials
@@ -52,10 +55,14 @@ const LandingScreen: React.FC = () => {
     } else {
       Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));
     }
+    setBiometricLoading(false);
   };
 
   const handleGuestLogin = async () => {
+    setGuestLoading(true);
     const result = await firebaseAuthService.loginAsGuest();
+    setGuestLoading(false);
+    
     if (result.success && result.user) {
       dispatch(loginSuccess(result.user));
     }
@@ -142,6 +149,7 @@ const LandingScreen: React.FC = () => {
               <Button
                 title={t('auth.guestMode')}
                 onPress={handleGuestLogin}
+                loading={guestLoading}
                 variant="secondary"
                 style={styles.button}
               />
@@ -150,6 +158,7 @@ const LandingScreen: React.FC = () => {
                 <Button
                   title={t('auth.biometricLogin')}
                   onPress={handleBiometricLogin}
+                  loading={biometricLoading}
                   variant="outline"
                   style={styles.button}
                 />

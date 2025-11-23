@@ -1,6 +1,7 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { User } from '../modules/auth/redux/authSlice';
+import { keychainService } from './keychain';
 
 // Reference for the implementation https://rnfirebase.io/
 
@@ -20,7 +21,7 @@ export interface SignUpData extends LoginCredentials {
 GoogleSignin.configure({
   // webClientId: '609903104796-4a41ff0791d31bd6fae0d9.apps.googleusercontent.com',
   iosClientId: '609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com',
-});
+ });
 
 export const firebaseAuthService = {
   async login(credentials: LoginCredentials): Promise<{ success: boolean; user?: User; error?: string }> {
@@ -29,6 +30,9 @@ export const firebaseAuthService = {
         credentials.email,
         credentials.password
       );
+      
+      // Store credentials for biometric login
+      await keychainService.storeUserCredentials(credentials.email, credentials.password);
       
       const firebaseUser = userCredential.user;
       const user: User = {
