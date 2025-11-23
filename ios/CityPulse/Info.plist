@@ -33,8 +33,15 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to authenticate</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlegmail</string>
+		<string>googlemail</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -49,5 +56,16 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

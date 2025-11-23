@@ -12,7 +12,12 @@
           "package_name": "ae.com.abcd.citypulse"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "609903104796-ivu5kigg70imoscuoog4dd4fs0a1fu3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAdIIdEL54ZLbvTvWZNuU5YThN80fk7fvA"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609903104796-ivu5kigg70imoscuoog4dd4fs0a1fu3v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ae.com.abcd.citypulse"
+              }
+            }
+          ]
         }
       }
     }
