@@ -131,12 +131,12 @@ const HomeScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: COLORS.WHITE,
   },
   content: {
     paddingHorizontal: SIZES.PADDING,
     paddingBottom: 24,
+    flex: 1,
   },
 });
 
