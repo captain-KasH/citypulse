@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import EventCard from '../home/components/EventCard';
 import Button from '../../components/Button';
+import { useFavorites } from '../../hooks/useFavorites';
 import { COLORS, SIZES } from '../../utils/constants';
 import { SCREENS } from '../../constants/screens';
 
@@ -16,7 +17,9 @@ const FavoritesScreen: React.FC = () => {
   const { favorites, events, upcomingEvents } = useSelector((state: RootState) => state.event);
   const { user } = useSelector((state: RootState) => state.auth);
   const { language } = useSelector((state: RootState) => state.app);
+  const { loadUserFavorites } = useFavorites();
   const [favoritesCount, setFavoritesCount] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   
   const userFavoriteIds = user ? favorites[user.id] || [] : [];
   const allEvents = [...events, ...upcomingEvents];
@@ -25,10 +28,20 @@ const FavoritesScreen: React.FC = () => {
   );
   const favoriteEvents = uniqueEvents.filter(event => userFavoriteIds.includes(event.id));
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await loadUserFavorites();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       setFavoritesCount(favoriteEvents.length);
-    }, [favoriteEvents.length])
+      loadUserFavorites();
+    }, [favoriteEvents.length, loadUserFavorites])
   );
 
   return (
@@ -80,6 +93,14 @@ const FavoritesScreen: React.FC = () => {
               </Text>
             </View>
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[COLORS.PRIMARY]}
+              tintColor={COLORS.PRIMARY}
+            />
+          }
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         />

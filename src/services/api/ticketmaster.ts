@@ -74,8 +74,8 @@ export const getEventDetails = async (eventId: string): Promise<Event | null> =>
     return null;
   } catch (error: any) {
     if (error.response) {
-      console.error('📊 Error Response Status:', error.response.status);
-      console.error('📋 Error Response Data:', error.response.data);
+      console.error('Error Response Status:', error.response.status);
+      console.error('Error Response Data:', error.response.data);
     }
     return null;
   }
