@@ -30,18 +30,13 @@ const SplashScreen: React.FC = () => {
       }),
     ]).start();
 
-    // Navigate after animation
+    // Mark splash as seen after animation
     const timer = setTimeout(() => {
       dispatch(setSplashSeen());
-      if (isAuthenticated) {
-        navigation.navigate('MainTabs' as never);
-      } else {
-        navigation.navigate('Landing' as never);
-      }
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

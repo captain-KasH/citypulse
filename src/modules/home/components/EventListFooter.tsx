@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.BORDER_RADIUS,
     minWidth: 150,
     alignItems: 'center',
+    marginBottom: 150,
   },
   loadMoreText: {
     fontSize: 16,

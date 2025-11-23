@@ -1,4 +1,4 @@
-import { firebase } from '@react-native-firebase/app';
+import firebase from '@react-native-firebase/app';
 
 // Firebase is automatically initialized on app start
 // This file can be used for additional Firebase configuration if needed

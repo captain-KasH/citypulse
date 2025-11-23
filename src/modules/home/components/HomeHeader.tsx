@@ -30,7 +30,7 @@ const HomeHeader: React.FC = () => {
         </View>
         <TouchableOpacity 
           style={[styles.profileIcon, { marginRight: Math.max(0, insets.right) }]}
-          onPress={() => navigation.navigate('Main', { screen: SCREENS.PROFILE})}
+          onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
         >
           <Text style={styles.profileIconText}>
             {user?.isGuest ? '👤' : user?.name?.charAt(0).toUpperCase() || '👤'}

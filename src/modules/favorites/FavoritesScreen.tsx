@@ -1,29 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
-import FavoritesList from '../profile/components/FavoritesList';
+import EventCard from '../home/components/EventCard';
 import Button from '../../components/Button';
-import { useNavigation } from '@react-navigation/native';
 import { COLORS, SIZES } from '../../utils/constants';
+import { SCREENS } from '../../constants/screens';
 
 const FavoritesScreen: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { favorites } = useSelector((state: RootState) => state.event);
+  const { favorites, events, upcomingEvents } = useSelector((state: RootState) => state.event);
   const { user } = useSelector((state: RootState) => state.auth);
   const { language } = useSelector((state: RootState) => state.app);
   const [favoritesCount, setFavoritesCount] = useState(0);
   
-  const userFavorites = user ? favorites[user.id] || [] : [];
+  const userFavoriteIds = user ? favorites[user.id] || [] : [];
+  const allEvents = [...events, ...upcomingEvents];
+  const uniqueEvents = allEvents.filter((event, index, self) => 
+    index === self.findIndex(e => e.id === event.id)
+  );
+  const favoriteEvents = uniqueEvents.filter(event => userFavoriteIds.includes(event.id));
 
   useFocusEffect(
     React.useCallback(() => {
-      setFavoritesCount(userFavorites.length);
-    }, [userFavorites.length])
+      setFavoritesCount(favoriteEvents.length);
+    }, [favoriteEvents.length])
   );
 
   return (
@@ -54,14 +59,30 @@ const FavoritesScreen: React.FC = () => {
           </View>
         </View>
       ) : (
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
+        <FlatList
+          data={favoriteEvents}
+          keyExtractor={(item, index) => item.id+index}
+          renderItem={({ item }) => (
+            <EventCard
+              event={item}
+              onPress={() => navigation.navigate(SCREENS.EVENT_DETAIL, { eventId: item.id })}
+            />
+          )}
+          ListHeaderComponent={() => (
             <Text style={styles.count}>
               {favoritesCount} {language === 'en' ? 'favorite events' : 'أحداث مفضلة'}
             </Text>
-            <FavoritesList />
-          </View>
-        </ScrollView>
+          )}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {language === 'en' ? 'No favorite events yet' : 'لا توجد أحداث مفضلة بعد'}
+              </Text>
+            </View>
+          )}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        />
       )}
     </SafeAreaView>
   );
@@ -72,8 +93,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },
-  scrollView: {
-    flex: 1,
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: COLORS.GRAY,
+    textAlign: 'center',
   },
   content: {
     padding: SIZES.PADDING,
@@ -82,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.GRAY,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   guestContainer: {
     flex: 1,

@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: SIZES.PADDING,
     paddingBottom: 24,
-    flex: 1,
   },
 });
 

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootState } from '../../../store';
 import EventCard from '../../home/components/EventCard';
 import { COLORS } from '../../../utils/constants';
+import { SCREENS } from '../../../constants/screens';
 
 const FavoritesList: React.FC = () => {
   const navigation = useNavigation();
@@ -17,7 +18,7 @@ const FavoritesList: React.FC = () => {
   const favoriteEvents = allEvents.filter(event => userFavorites.includes(event.id));
 
   const handleEventPress = (eventId: string) => {
-    navigation.navigate('EventDetail' as never, { eventId } as never);
+    navigation.navigate(SCREENS.EVENT_DETAIL, { eventId } as never);
   };
 
   if (favoriteEvents.length === 0) {

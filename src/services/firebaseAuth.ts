@@ -15,6 +15,8 @@ export interface SignUpData extends LoginCredentials {
 
 // Configure Google Sign-In
 // ToDo:: move to .env
+
+// https://console.firebase.google.com/u/0/project/citypulse-a2b25/settings/general/ios:ae.com.abcd.citypulse
 GoogleSignin.configure({
   // webClientId: '609903104796-4a41ff0791d31bd6fae0d9.apps.googleusercontent.com',
   iosClientId: '609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com',
@@ -104,7 +106,7 @@ export const firebaseAuthService = {
     try {
       await GoogleSignin.hasPlayServices();
       const signInResult = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data?.idToken);
+      const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data?.idToken || null);
       const userCredential = await auth().signInWithCredential(googleCredential);
       
       const firebaseUser = userCredential.user;

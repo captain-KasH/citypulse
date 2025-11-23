@@ -1,11 +1,11 @@
-import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
+import ReactNativeBiometrics, { BiometryTypes, BiometryType } from 'react-native-biometrics';
 
 const rnBiometrics = new ReactNativeBiometrics();
 
 export interface BiometricResult {
   success: boolean;
   error?: string;
-  biometryType?: BiometryTypes;
+  biometryType?: BiometryType;
 }
 
 export const biometricService = {
