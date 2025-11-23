@@ -34,7 +34,7 @@ export const keychainService = {
 
   async clearUserCredentials(): Promise<boolean> {
     try {
-      await Keychain.resetInternetCredentials(STORAGE_KEYS.USER_DATA);
+      await Keychain.resetInternetCredentials({ server: STORAGE_KEYS.USER_DATA });
       return true;
     } catch (error) {
       console.error('Error clearing credentials:', error);

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../auth/redux/authSlice';
 import { setLanguage, setBiometricEnabled } from '../app/redux/appSlice';
-import { mockAuthService } from '../auth/mockAuth';
+import { firebaseAuthService } from '../../services/firebaseAuth';
 import { biometricService } from '../../services/biometric';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
@@ -41,7 +41,7 @@ const ProfileScreen: React.FC = () => {
           text: t('auth.logout'),
           style: 'destructive',
           onPress: async () => {
-            await mockAuthService.logout();
+            await firebaseAuthService.logout();
             dispatch(logout());
           },
         },

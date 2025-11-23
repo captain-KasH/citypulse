@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import { mockAuthService } from './mockAuth';
+import { firebaseAuthService } from '../../services/firebaseAuth';
 import { loginSuccess } from './redux/authSlice';
 import { COLORS, SIZES } from '../../utils/constants';
 
@@ -23,7 +23,7 @@ const LoginScreen: React.FC = () => {
     }
 
     setLoading(true);
-    const result = await mockAuthService.login({ email, password });
+    const result = await firebaseAuthService.login({ email, password });
     setLoading(false);
 
     if (result.success && result.user) {

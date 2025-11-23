@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { useAuthListener } from '../hooks/useAuthListener';
 
 import SplashScreen from '../modules/auth/SplashScreen';
 import LandingScreen from '../modules/auth/LandingScreen';
@@ -21,6 +22,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
+  useAuthListener();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [showSplash, setShowSplash] = useState(true);
 

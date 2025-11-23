@@ -10,7 +10,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8CD65B652ED2CB4D0025AC2F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CD65B642ED2CB4D0025AC2F /* GoogleService-Info.plist */; };
+		8CD65B672ED2DDD30025AC2F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CD65B662ED2DDD30025AC2F /* GoogleService-Info.plist */; };
 		A7E54BE8B93BB0BB1B198E07 /* Pods_CityPulse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40111D6331EDDDFA403CD94D /* Pods_CityPulse.framework */; };
 		AC67BD03CE517DF744883ACF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -24,7 +24,7 @@
 		40111D6331EDDDFA403CD94D /* Pods_CityPulse.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CityPulse.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CityPulse/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CityPulse/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8CD65B642ED2CB4D0025AC2F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8CD65B662ED2DDD30025AC2F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AFE08F32C7362D2089F0B7C8 /* Pods-CityPulse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityPulse.debug.xcconfig"; path = "Target Support Files/Pods-CityPulse/Pods-CityPulse.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -44,7 +44,7 @@
 		13B07FAE1A68108700A75B9A /* CityPulse */ = {
 			isa = PBXGroup;
 			children = (
-				8CD65B642ED2CB4D0025AC2F /* GoogleService-Info.plist */,
+				8CD65B662ED2DDD30025AC2F /* GoogleService-Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -163,7 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				8CD65B652ED2CB4D0025AC2F /* GoogleService-Info.plist in Resources */,
+				8CD65B672ED2DDD30025AC2F /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				AC67BD03CE517DF744883ACF /* PrivacyInfo.xcprivacy in Resources */,
 			);

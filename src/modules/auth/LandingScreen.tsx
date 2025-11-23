@@ -7,7 +7,7 @@ import { RootState } from '../../store';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import { mockAuthService } from './mockAuth';
+import { firebaseAuthService } from '../../services/firebaseAuth';
 import { loginSuccess } from '../../store/slices/authSlice';
 import { biometricService } from '../../services/biometric';
 import { keychainService } from '../../services/keychain';
@@ -21,6 +21,7 @@ const LandingScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
 
   React.useEffect(() => {
@@ -39,7 +40,7 @@ const LandingScreen: React.FC = () => {
       const credentials = await keychainService.getUserCredentials();
       if (credentials) {
         // Login with stored credentials
-        const authResult = await mockAuthService.login(credentials);
+        const authResult = await firebaseAuthService.login(credentials);
         if (authResult.success && authResult.user) {
           dispatch(loginSuccess(authResult.user));
         } else {
@@ -54,7 +55,7 @@ const LandingScreen: React.FC = () => {
   };
 
   const handleGuestLogin = async () => {
-    const result = await mockAuthService.loginAsGuest();
+    const result = await firebaseAuthService.loginAsGuest();
     if (result.success && result.user) {
       dispatch(loginSuccess(result.user));
     }
@@ -77,8 +78,20 @@ const LandingScreen: React.FC = () => {
     }
 
     setLoading(true);
-    const result = await mockAuthService.login({ email, password });
+    const result = await firebaseAuthService.login({ email, password });
     setLoading(false);
+
+    if (result.success && result.user) {
+      dispatch(loginSuccess(result.user));
+    } else {
+      Alert.alert(t('auth.loginFailed'), result.error || t('auth.tryAgain'));
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    const result = await firebaseAuthService.signInWithGoogle();
+    setGoogleLoading(false);
 
     if (result.success && result.user) {
       dispatch(loginSuccess(result.user));
@@ -144,10 +157,10 @@ const LandingScreen: React.FC = () => {
               
               <Button
                 title={t('auth.signInGoogle')}
-                onPress={() => {/* Placeholder for Phase 2 */}}
+                onPress={handleGoogleSignIn}
+                loading={googleLoading}
                 variant="outline"
                 style={[styles.button, styles.googleButton]}
-                disabled
               />
               
               <View style={styles.signupContainer}>
