@@ -41,7 +41,7 @@ const FavoritesScreen: React.FC = () => {
     React.useCallback(() => {
       setFavoritesCount(favoriteEvents.length);
       loadUserFavorites();
-    }, [favoriteEvents.length, loadUserFavorites])
+    }, [favoriteEvents.length])
   );
 
   return (
