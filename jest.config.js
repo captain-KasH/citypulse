@@ -10,5 +10,6 @@ module.exports = {
     '@react-native-firebase/app': '<rootDir>/__mocks__/@react-native-firebase/app.js',
     '@react-native-firebase/auth': '<rootDir>/__mocks__/@react-native-firebase/auth.js',
     '@react-native-firebase/firestore': '<rootDir>/__mocks__/@react-native-firebase/firestore.js',
+    'react-native-reanimated': '<rootDir>/__mocks__/react-native-reanimated.js',
   },
 };
