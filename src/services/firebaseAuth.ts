@@ -96,9 +96,21 @@ export const firebaseAuthService = {
 
   async logout(): Promise<boolean> {
     try {
+      // Check if user signed in with Google and sign out from Google
+      const authMethod = await keychainService.getAuthMethod();
+      if (authMethod === 'google') {
+        await GoogleSignin.signOut();
+      }
+      
+      // Sign out from Firebase
       await auth().signOut();
+      
+      // Clear stored credentials and auth method
+      await keychainService.clearUserCredentials();
+      
       return true;
     } catch (error) {
+      console.error('Logout error:', error);
       return false;
     }
   },

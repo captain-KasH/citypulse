@@ -15,6 +15,7 @@ export const useAuthListener = () => {
           name: firebaseUser.displayName || 'User',
           email: firebaseUser.email || '',
           isGuest: firebaseUser.isAnonymous,
+          photoURL: firebaseUser.photoURL || undefined,
         };
         dispatch(loginSuccess(user));
       } else {
@@ -23,5 +24,5 @@ export const useAuthListener = () => {
     });
 
     return unsubscribe;
-  }, [dispatch]);
+  }, []);
 };

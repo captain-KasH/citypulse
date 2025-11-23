@@ -106,11 +106,7 @@ const FavoritesScreen: React.FC = () => {
               tintColor={COLORS.PRIMARY}
             />
           }
-          ListFooterComponent={<View style={
-            {
-              marginBottom:30
-            }
-          }/>}
+          ListFooterComponent={<View style={styles.footerContainer}/>}
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         />
@@ -134,6 +130,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: SIZES.PADDING,
+    backgroundColor: COLORS.WHITE,
+    flexGrow: 1,
   },
   count: {
     fontSize: 16,
