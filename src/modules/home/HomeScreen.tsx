@@ -79,7 +79,7 @@ const HomeScreen: React.FC = () => {
       {searchLoading && searchQuery ? (
         <FlatList
           data={[...Array(5)].map((_, index) => ({ id: `skeleton-${index}` }))}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           renderItem={() => <EventCardSkeleton />}
           ListHeaderComponent={() => (
             <EventListHeader 
@@ -94,7 +94,7 @@ const HomeScreen: React.FC = () => {
       ) : (
         <FlatList
           data={events}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           renderItem={renderEventItem}
           ListHeaderComponent={() => (
             <EventListHeader 

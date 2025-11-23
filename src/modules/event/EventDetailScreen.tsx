@@ -6,7 +6,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '../../store';
-import { toggleFavorite } from '../event/redux/eventSlice';
+import { useFavorites } from '../../hooks/useFavorites';
 import { setLanguage } from '../app/redux/appSlice';
 import { getEventDetails } from '../../services/api/ticketmaster';
 import Button from '../../components/Button';
@@ -23,15 +23,15 @@ const EventDetailScreen: React.FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { eventId } = route.params as { eventId: string };
-  const { events, favorites } = useSelector((state: RootState) => state.event);
+  const { events } = useSelector((state: RootState) => state.event);
   const { user } = useSelector((state: RootState) => state.auth);
   const { language, isRTL } = useSelector((state: RootState) => state.app);
+  const { favorites, handleToggleFavorite, loadUserFavorites } = useFavorites();
   const [event, setEvent] = useState(events.find(e => e.id === eventId) || null);
   const [loading, setLoading] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   
-  const userFavorites = user ? favorites[user.id] || [] : [];
-  const isFavorite = userFavorites.includes(eventId);
+  const isFavorite = favorites.includes(eventId);
 
   useEffect(() => {
     const loadEventDetails = async () => {
@@ -49,9 +49,10 @@ const EventDetailScreen: React.FC = () => {
     };
     
     loadEventDetails();
+    loadUserFavorites();
   }, [eventId]);
 
-  const handleToggleFavorite = () => {
+  const onToggleFavorite = () => {
     if (!user || user.isGuest) {
       Alert.alert(
         t('auth.loginRequired'),
@@ -59,7 +60,7 @@ const EventDetailScreen: React.FC = () => {
       );
       return;
     }
-    dispatch(toggleFavorite({ eventId, userId: user.id }));
+    handleToggleFavorite(eventId);
   };
 
 
@@ -129,7 +130,7 @@ const EventDetailScreen: React.FC = () => {
             
             <TouchableOpacity
               style={[styles.favoriteButton, isFavorite && styles.favoriteActive]}
-              onPress={handleToggleFavorite}
+              onPress={onToggleFavorite}
             >
               <Text style={[styles.favoriteText, isFavorite && styles.favoriteTextActive]}>
                 {isFavorite ? '♥' : '♡'}

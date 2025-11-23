@@ -19,7 +19,7 @@ export interface SignUpData extends LoginCredentials {
 
 // https://console.firebase.google.com/u/0/project/citypulse-a2b25/settings/general/ios:ae.com.abcd.citypulse
 GoogleSignin.configure({
-  // webClientId: '609903104796-4a41ff0791d31bd6fae0d9.apps.googleusercontent.com',
+  // webClientId: '119180053402-4ja6s4opp8td9g6evgfl41fl1toj06r8.apps.googleusercontent.com',
   iosClientId: '609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com',
  });
 

@@ -214,24 +214,15 @@ export const getUpcomingEvents = async (page: number = 0, size: number = 10): Pr
 
 export const getEventDetails = async (eventId: string): Promise<Event | null> => {
   try {
-    console.log('🔍 Making API call for event details:', eventId);
-    console.log('🌐 API URL:', `${API_CONFIG.TICKETMASTER_BASE_URL}/events/${eventId}.json`);
-    console.log('🔑 API Key:', API_CONFIG.TICKETMASTER_API_KEY ? 'Present' : 'Missing');
-    
     const response = await api.get(`/events/${eventId}.json`);
-    console.log('✅ Event Details API Response Status:', response.status);
-    console.log('📦 Event Details Response Data:', response.data);
     
     if (response.data) {
       const mappedEvent = mapTicketmasterEvent(response.data);
-      console.log('🎯 Mapped Event:', mappedEvent);
       return mappedEvent;
     }
     
-    console.log('❌ No event data in response');
     return null;
   } catch (error: any) {
-    console.error('💥 Error fetching event details:', error);
     if (error.response) {
       console.error('📊 Error Response Status:', error.response.status);
       console.error('📋 Error Response Data:', error.response.data);
