@@ -39,15 +39,29 @@ const LandingScreen: React.FC = () => {
     setBiometricLoading(true);
     const result = await biometricService.authenticate(t('auth.biometricPrompt'));
     if (result.success) {
-      // Try to get stored credentials
-      const credentials = await keychainService.getUserCredentials();
-      if (credentials) {
-        // Login with stored credentials
-        const authResult = await firebaseAuthService.login(credentials);
+      // Check auth method
+      const authMethod = await keychainService.getAuthMethod();
+      
+      if (authMethod === 'email') {
+        // Try to get stored credentials for email login
+        const credentials = await keychainService.getUserCredentials();
+        if (credentials) {
+          const authResult = await firebaseAuthService.login(credentials);
+          if (authResult.success && authResult.user) {
+            dispatch(loginSuccess(authResult.user));
+          } else {
+            Alert.alert(t('auth.loginFailed'), t('auth.storedCredentialsInvalid'));
+          }
+        } else {
+          Alert.alert(t('auth.biometricFailed'), t('auth.noStoredCredentials'));
+        }
+      } else if (authMethod === 'google') {
+        // Use Google Sign-In for biometric login
+        const authResult = await firebaseAuthService.signInWithGoogle();
         if (authResult.success && authResult.user) {
           dispatch(loginSuccess(authResult.user));
         } else {
-          Alert.alert(t('auth.loginFailed'), t('auth.storedCredentialsInvalid'));
+          Alert.alert(t('auth.loginFailed'), authResult.error || t('auth.tryAgain'));
         }
       } else {
         Alert.alert(t('auth.biometricFailed'), t('auth.noStoredCredentials'));

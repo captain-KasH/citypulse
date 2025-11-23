@@ -31,8 +31,9 @@ export const firebaseAuthService = {
         credentials.password
       );
       
-      // Store credentials for biometric login
+      // Store credentials and auth method for biometric login
       await keychainService.storeUserCredentials(credentials.email, credentials.password);
+      await keychainService.storeAuthMethod('email');
       
       const firebaseUser = userCredential.user;
       const user: User = {
@@ -119,8 +120,11 @@ export const firebaseAuthService = {
         name: firebaseUser.displayName || 'User',
         email: firebaseUser.email || '',
         isGuest: false,
+        photoURL: firebaseUser.photoURL || undefined,
       };
 
+      // Store auth method for Google login
+      await keychainService.storeAuthMethod('google');
       return { success: true, user };
     } catch (error: any) {
       console.error('signInWithGoogle error', error);

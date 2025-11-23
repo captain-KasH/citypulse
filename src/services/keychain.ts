@@ -35,10 +35,34 @@ export const keychainService = {
   async clearUserCredentials(): Promise<boolean> {
     try {
       await Keychain.resetInternetCredentials({ server: STORAGE_KEYS.USER_DATA });
+      await Keychain.resetInternetCredentials({ server: 'AUTH_METHOD' });
       return true;
     } catch (error) {
       console.error('Error clearing credentials:', error);
       return false;
+    }
+  },
+
+  async storeAuthMethod(method: 'email' | 'google'): Promise<boolean> {
+    try {
+      await Keychain.setInternetCredentials(
+        'AUTH_METHOD',
+        'auth_method',
+        method
+      );
+      return true;
+    } catch (error) {
+      console.error('Error storing auth method:', error);
+      return false;
+    }
+  },
+
+  async getAuthMethod(): Promise<'email' | 'google' | null> {
+    try {
+      const credentials = await Keychain.getInternetCredentials('AUTH_METHOD');
+      return credentials ? credentials.password as 'email' | 'google' : null;
+    } catch (error) {
+      return null;
     }
   },
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { RootStackParamList } from '../../../types/navigation';
@@ -32,9 +32,13 @@ const HomeHeader: React.FC = () => {
           style={[styles.profileIcon, { marginRight: Math.max(0, insets.right) }]}
           onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
         >
-          <Text style={styles.profileIconText}>
-            {user?.isGuest ? '👤' : user?.name?.charAt(0).toUpperCase() || '👤'}
-          </Text>
+          {user?.photoURL ? (
+            <Image source={{ uri: user.photoURL }} style={styles.profileImage} />
+          ) : (
+            <Text style={styles.profileIconText}>
+              {user?.isGuest ? '👤' : user?.name?.charAt(0).toUpperCase() || '👤'}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -70,6 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.PRIMARY,
     fontWeight: 'bold',
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   greeting: {
     fontSize: 24,

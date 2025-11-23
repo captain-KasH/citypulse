@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Switch, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
@@ -57,26 +57,9 @@ const ProfileScreen: React.FC = () => {
       // Enable biometric - require authentication first
       const result = await biometricService.authenticate(t('profile.enableBiometricPrompt'));
       if (result.success) {
-        // Check if credentials are already stored
-        const existingCredentials = await keychainService.getUserCredentials();
-        if (!existingCredentials) {
-          Alert.alert(
-            t('profile.biometricEnabled'),
-            'Please login again with your email and password to enable biometric authentication.',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  dispatch(setBiometricEnabled(true));
-                  dispatch(logout());
-                }
-              }
-            ]
-          );
-        } else {
-          dispatch(setBiometricEnabled(true));
-          Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
-        }
+        // Enable biometric for all authenticated users
+        dispatch(setBiometricEnabled(true));
+        Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
       } else {
         Alert.alert(t('auth.biometricFailed'), result.error || t('auth.tryAgain'));
       }
@@ -116,9 +99,13 @@ const ProfileScreen: React.FC = () => {
 
         <View style={styles.userInfo}>
           <View style={styles.profileIcon}>
-            <Text style={styles.profileIconText}>
-              {user?.isGuest ? '👤' : user?.name?.charAt(0).toUpperCase() || '👤'}
-            </Text>
+            {user?.photoURL ? (
+              <Image source={{ uri: user.photoURL }} style={styles.profileImage} />
+            ) : (
+              <Text style={styles.profileIconText}>
+                {user?.isGuest ? '👤' : user?.name?.charAt(0).toUpperCase() || '👤'}
+              </Text>
+            )}
           </View>
           <Text style={styles.userName}>
             {user?.isGuest ? t('profile.guestUser') : user?.name}
@@ -215,6 +202,11 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: COLORS.PRIMARY,
     fontWeight: 'bold',
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   userName: {
     fontSize: 20,
