@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "609903104796-mcjp45jgj361mnssvp1gobkegbm0or33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ae.com.abcd.citypulse",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "609903104796-rno3o32e56jd5gflkvga84g7aa1jea3f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ae.com.abcd.citypulse",
+            "certificate_hash": "26091aa100598b7e80d4bd987e42b636113fe373"
+          }
+        },
+        {
           "client_id": "609903104796-ivu5kigg70imoscuoog4dd4fs0a1fu3v.apps.googleusercontent.com",
           "client_type": 3
         }

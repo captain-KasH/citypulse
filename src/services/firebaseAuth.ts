@@ -19,7 +19,7 @@ export interface SignUpData extends LoginCredentials {
 
 // https://console.firebase.google.com/u/0/project/citypulse-a2b25/settings/general/ios:ae.com.abcd.citypulse
 GoogleSignin.configure({
-  // webClientId: '119180053402-4ja6s4opp8td9g6evgfl41fl1toj06r8.apps.googleusercontent.com',
+  webClientId: '609903104796-ivu5kigg70imoscuoog4dd4fs0a1fu3v.apps.googleusercontent.com',
   iosClientId: '609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com',
  });
 
@@ -123,8 +123,8 @@ export const firebaseAuthService = {
 
       return { success: true, user };
     } catch (error: any) {
-      console.error('signInWithGoogle error', error.message);
-      return { success: false, error: error.message };
+      console.error('signInWithGoogle error', error);
+      return { success: false, error: 'Google Sign-In failed' };
     }
   },
 
