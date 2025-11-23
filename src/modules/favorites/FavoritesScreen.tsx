@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import EventCard from '../home/components/EventCard';
+import EventCardSkeleton from '../../components/EventCardSkeleton';
 import Button from '../../components/Button';
 import { useFavorites } from '../../hooks/useFavorites';
 import { COLORS, SIZES } from '../../utils/constants';
@@ -21,6 +22,7 @@ const FavoritesScreen: React.FC = () => {
   const { loadUserFavorites } = useFavorites();
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   const favoriteEvents = useMemo(() => {
     if (!user) return [];
@@ -41,9 +43,18 @@ const FavoritesScreen: React.FC = () => {
     }
   };
 
+  const loadFavorites = async () => {
+    setLoading(true);
+    try {
+      await loadUserFavorites();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      loadUserFavorites();
+      loadFavorites();
     }, [])
   );
 
@@ -75,6 +86,15 @@ const FavoritesScreen: React.FC = () => {
               style={styles.actionButton}
             />
           </View>
+        </View>
+      ) : loading ? (
+        <View style={styles.content}>
+          <Text style={styles.count}>
+            {t('common.loading')}
+          </Text>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <EventCardSkeleton key={index} />
+          ))}
         </View>
       ) : (
         <FlatList
@@ -118,6 +138,7 @@ const FavoritesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.WHITE,
+    flex:1,
   },
   emptyContainer: {
     paddingVertical: 40,
