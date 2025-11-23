@@ -7,11 +7,13 @@ import { COLORS } from '../utils/constants';
 
 interface LanguageToggleProps {
   style?: any;
+  displayCurrent?: boolean;
 }
 
-const LanguageToggle: React.FC<LanguageToggleProps> = ({ style }) => {
+const LanguageToggle: React.FC<LanguageToggleProps> = ({ style, displayCurrent }) => {
   const dispatch = useDispatch();
   const { language } = useSelector((state: RootState) => state.app);
+  const languageText = (!displayCurrent && language === 'en') ? 'عربي' : 'EN';
 
   return (
     <TouchableOpacity 
@@ -19,7 +21,7 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({ style }) => {
       onPress={() => dispatch(setLanguage(language === 'en' ? 'ar' : 'en'))}
     >
       <Text style={styles.languageText}>
-        {language === 'en' ? 'عربي' : 'EN'}
+        {languageText}
       </Text>
     </TouchableOpacity>
   );
