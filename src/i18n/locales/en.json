@@ -67,10 +67,14 @@
     "mapUnavailable": "Map unavailable"
   },
   "favorites": {
-    "title": "Favorites",
+    "title": "My Favorites",
     "noFavorites": "No favorite events yet",
     "addToFavorites": "Add to Favorites",
-    "removeFromFavorites": "Remove from Favorites"
+    "removeFromFavorites": "Remove from Favorites",
+    "loginRequired": "Login Required",
+    "loginMessage": "Create an account to save your favorite events and access them anytime",
+    "backToLogin": "Back to Login",
+    "favoriteEvents": "favorite events"
   },
   "profile": {
     "title": "Profile",

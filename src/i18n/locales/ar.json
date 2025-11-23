@@ -70,7 +70,11 @@
     "title": "المفضلة",
     "noFavorites": "لا توجد أحداث مفضلة بعد",
     "addToFavorites": "إضافة إلى المفضلة",
-    "removeFromFavorites": "إزالة من المفضلة"
+    "removeFromFavorites": "إزالة من المفضلة",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "loginMessage": "أنشئ حسابًا لحفظ الأحداث المفضلة والوصول إليها في أي وقت",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "favoriteEvents": "أحداث مفضلة"
   },
   "profile": {
     "title": "الملف الشخصي",
