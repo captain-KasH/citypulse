@@ -32,19 +32,19 @@ const FavoritesScreen: React.FC = () => {
     return uniqueEvents.filter(event => userFavoriteIds.includes(event.id));
   }, [user, favorites, events, upcomingEvents]);
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = async () => {
     setRefreshing(true);
     try {
       await loadUserFavorites();
     } finally {
       setRefreshing(false);
     }
-  }, [loadUserFavorites]);
+  };
 
   useFocusEffect(
     React.useCallback(() => {
       loadUserFavorites();
-    }, [loadUserFavorites])
+    }, [])
   );
 
   React.useEffect(() => {
@@ -106,6 +106,11 @@ const FavoritesScreen: React.FC = () => {
               tintColor={COLORS.PRIMARY}
             />
           }
+          ListFooterComponent={<View style={
+            {
+              marginBottom:30
+            }
+          }/>}
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         />
@@ -116,7 +121,6 @@ const FavoritesScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: COLORS.WHITE,
   },
   emptyContainer: {
@@ -170,6 +174,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.BLACK,
   },
+  footerContainer: {
+    marginBottom: 30
+  }
 });
 
 export default FavoritesScreen;

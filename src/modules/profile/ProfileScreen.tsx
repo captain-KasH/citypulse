@@ -137,7 +137,7 @@ const ProfileScreen: React.FC = () => {
             <Text style={styles.settingLabel}>
               {t('profile.language')}
             </Text>
-            <LanguageToggle displayCurrent/>
+            <LanguageToggle displayCurrent />
           </View>
           
           <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest) && styles.disabledItem]}>
