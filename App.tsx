@@ -12,6 +12,18 @@ const App: React.FC = () => {
     initializeFirebase();
   }, []);
 
+  /** 
+   * 
+   * TODO:
+   * - Implement app update mechanism (force/soft update)
+   * - Add remote config and feature flags integration
+   * - Implement dynamic splash screen with maintenance mode
+   * - Add crash reporting and analytics
+   * - Implement deep linking support
+   * - Add push notification setup
+   * 
+   */ 
+
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
