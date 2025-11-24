@@ -21,6 +21,7 @@ export interface SignUpData extends LoginCredentials {
 GoogleSignin.configure({
   webClientId: '609903104796-ivu5kigg70imoscuoog4dd4fs0a1fu3v.apps.googleusercontent.com',
   iosClientId: '609903104796-mo2004vpr46d5e699hkrif85ehl76ecn.apps.googleusercontent.com',
+  offlineAccess: true,
  });
 
 export const firebaseAuthService = {
@@ -96,10 +97,14 @@ export const firebaseAuthService = {
 
   async logout(clearCredentials: boolean = false): Promise<boolean> {
     try {
-      // Check if user signed in with Google and sign out from Google
       const authMethod = await keychainService.getAuthMethod();
+      
+      // For Google users with biometric enabled, don't sign out from Google
       if (authMethod === 'google') {
-        await GoogleSignin.signOut();
+        const biometricFlag = await keychainService.getGoogleBiometricFlag();
+        if (!biometricFlag) {
+          await GoogleSignin.signOut();
+        }
       }
       
       // Sign out from Firebase
@@ -137,8 +142,9 @@ export const firebaseAuthService = {
         photoURL: firebaseUser.photoURL || undefined,
       };
 
-      // Store auth method for Google login
+      // Store auth method and biometric flag for Google login
       await keychainService.storeAuthMethod('google');
+      await keychainService.storeGoogleBiometricFlag(true);
       return { success: true, user };
     } catch (error: any) {
       console.error('signInWithGoogle error', error);
@@ -147,6 +153,42 @@ export const firebaseAuthService = {
   },
 
 
+
+  async biometricGoogleSignIn(): Promise<{ success: boolean; user?: User; error?: string }> {
+    try {
+      // First check if there's a current Firebase user
+      const currentUser = auth().currentUser;
+      if (currentUser) {
+        const user: User = {
+          id: currentUser.uid,
+          name: currentUser.displayName || 'User',
+          email: currentUser.email || '',
+          isGuest: false,
+          photoURL: currentUser.photoURL || undefined,
+        };
+        return { success: true, user };
+      }
+
+      // If no current user, try silent Google Sign-In
+      const signInResult = await GoogleSignin.signInSilently();
+      const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data?.idToken || null);
+      const userCredential = await auth().signInWithCredential(googleCredential);
+      
+      const firebaseUser = userCredential.user;
+      const user: User = {
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName || 'User',
+        email: firebaseUser.email || '',
+        isGuest: false,
+        photoURL: firebaseUser.photoURL || undefined,
+      };
+
+      return { success: true, user };
+    } catch (error: any) {
+      console.log('Biometric Google Sign-In failed:', error.message);
+      return { success: false, error: 'Biometric authentication failed' };
+    }
+  },
 
   onAuthStateChanged(callback: (user: FirebaseAuthTypes.User | null) => void) {
     return auth().onAuthStateChanged(callback);

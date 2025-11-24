@@ -39,9 +39,16 @@ const ProfileScreen: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    const authMethod = await keychainService.getAuthMethod();
+    const isGoogleUser = authMethod === 'google';
+    
+    const message = isGoogleUser && biometricEnabled 
+      ? t('profile.logoutConfirmGoogleBiometric')
+      : t('profile.logoutConfirm');
+    
     Alert.alert(
       t('auth.logout'),
-      t('profile.logoutConfirm'),
+      message,
       [
         {
           text: t('common.cancel'),
@@ -63,31 +70,16 @@ const ProfileScreen: React.FC = () => {
   const handleBiometricToggle = async (value: boolean) => {
     if (user?.isGuest || !biometricAvailable) return;
     
-    // Check if user is using Google Sign-In
     const authMethod = await keychainService.getAuthMethod();
-    if (authMethod === 'google') {
-      Alert.alert(
-        t('profile.biometricNotAvailable'),
-        t('profile.biometricEmailOnly')
-      );
-      return;
-    }
     
     if (value) {
-      // Check if user has existing credentials stored
-      const existingCredentials = await keychainService.getUserCredentials();
-      
-      if (!existingCredentials) {
-        Alert.alert(
-          t('profile.biometricSetup'),
-          t('profile.biometricSetupMessage')
-        );
-        return;
-      }
-      
-      // For email users, authenticate with biometrics first
+      // Authenticate with biometrics first
       const result = await biometricService.authenticate(t('profile.enableBiometricPrompt'));
       if (result.success) {
+        if (authMethod === 'google') {
+          // For Google users, store biometric flag
+          await keychainService.storeGoogleBiometricFlag(true);
+        }
         dispatch(setBiometricEnabled(true));
         Alert.alert(t('profile.biometricEnabled'), t('profile.biometricEnabledMessage'));
       } else {
@@ -106,7 +98,10 @@ const ProfileScreen: React.FC = () => {
           {
             text: t('profile.disable'),
             style: 'destructive',
-            onPress: () => {
+            onPress: async () => {
+              if (authMethod === 'google') {
+                await keychainService.storeGoogleBiometricFlag(false);
+              }
               dispatch(setBiometricEnabled(false));
               Alert.alert(t('profile.biometricDisabled'), t('profile.biometricDisabledMessage'));
             },
@@ -159,9 +154,9 @@ const ProfileScreen: React.FC = () => {
             <LanguageToggle displayCurrent />
           </View>
           
-          <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest || isGoogleUser) && styles.disabledItem]}>
+          <View style={[styles.settingItem, (!biometricAvailable || user?.isGuest) && styles.disabledItem]}>
             <View style={styles.settingLabelContainer}>
-              <Text style={[styles.settingLabel, (!biometricAvailable || user?.isGuest || isGoogleUser) && styles.disabledText]}>
+              <Text style={[styles.settingLabel, (!biometricAvailable || user?.isGuest) && styles.disabledText]}>
                 {t('profile.biometricLogin')}
               </Text>
               {!biometricAvailable && (
@@ -174,16 +169,11 @@ const ProfileScreen: React.FC = () => {
                   {t('profile.loginRequired')}
                 </Text>
               )}
-              {isGoogleUser && biometricAvailable && !user?.isGuest && (
-                <Text style={[styles.settingSubtext, styles.warningText]}>
-                  {t('profile.biometricEmailOnly')}
-                </Text>
-              )}
             </View>
             <Switch
-              value={biometricEnabled && biometricAvailable && !isGoogleUser}
+              value={biometricEnabled && biometricAvailable}
               onValueChange={handleBiometricToggle}
-              disabled={!biometricAvailable || user?.isGuest || isGoogleUser}
+              disabled={!biometricAvailable || user?.isGuest}
               trackColor={{ false: COLORS.LIGHT_GRAY, true: COLORS.PRIMARY }}
               thumbColor={COLORS.WHITE}
             />

@@ -55,6 +55,14 @@ const LandingScreen: React.FC = () => {
         } else {
           Alert.alert(t('auth.biometricFailed'), t('auth.noStoredCredentials'));
         }
+      } else if (authMethod === 'google') {
+        // Try biometric Google Sign-In (checks session first, then silent sign-in)
+        const authResult = await firebaseAuthService.biometricGoogleSignIn();
+        if (authResult.success && authResult.user) {
+          dispatch(loginSuccess(authResult.user));
+        } else {
+          Alert.alert(t('auth.biometricFailed'), authResult.error || t('auth.sessionExpired'));
+        }
       } else {
         Alert.alert(t('auth.biometricFailed'), t('auth.noStoredCredentials'));
       }

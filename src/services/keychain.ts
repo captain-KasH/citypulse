@@ -92,4 +92,27 @@ export const keychainService = {
       return [];
     }
   },
+
+  async storeGoogleBiometricFlag(enabled: boolean): Promise<boolean> {
+    try {
+      await Keychain.setInternetCredentials(
+        'GOOGLE_BIOMETRIC_FLAG',
+        'google_biometric',
+        enabled.toString()
+      );
+      return true;
+    } catch (error) {
+      console.error('Error storing Google biometric flag:', error);
+      return false;
+    }
+  },
+
+  async getGoogleBiometricFlag(): Promise<boolean> {
+    try {
+      const credentials = await Keychain.getInternetCredentials('GOOGLE_BIOMETRIC_FLAG');
+      return credentials ? credentials.password === 'true' : false;
+    } catch (error) {
+      return false;
+    }
+  },
 };

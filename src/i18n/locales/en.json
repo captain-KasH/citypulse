@@ -106,6 +106,7 @@
     "enterPasswordMessage": "Enter your password for biometric login:",
     "credentialsStored": "Credentials stored securely. Biometric login is now enabled.",
     "biometricNotAvailable": "Biometric Login Not Available",
-    "biometricEmailOnly": "Biometric login is only available for email login at this moment"
+    "biometricEmailOnly": "Biometric login is only available for email login at this moment",
+    "logoutConfirmGoogleBiometric": "Are you sure you want to logout? Your Google session will be preserved for biometric login. For full logout, disable biometric first."
   }
 }
